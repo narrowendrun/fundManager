@@ -1,0 +1,107 @@
+:root {
+  --transition: all cubic-bezier(0.215, 0.61, 0.355, 1) 0.3s;
+  --transition-main: all cubic-bezier(0.215, 0.61, 0.355, 1) 0.3s;
+  --rounded-borders: 15px;
+  --primary-dark: rgba(2, 0, 36, 1);
+  --primary-light: rgba(0, 202, 249, 1);
+  --bg-bg: linear-gradient(var(--primary-light), var(--primary-dark));
+  --secondary-dark: rgb(30, 30, 62, 1);
+  --secondary-light: antiquewhite;
+  --input-bg-light: #897869;
+  --input-bg-dark: #000;
+  --fadein-opacity: 0;
+  --fadein-blur: blur(10px);
+  --fade: 0.85;
+  --box-shadow-output: rgba(0, 0, 0, 0.3) 0px 19px 38px;
+  --box-shadow-input: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+body {
+  background:#09203f;
+  background-image: url(../images/bg.png);
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.navbar{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100vw;
+}
+.fundName{
+  position: fixed;  
+  background-color: var(--primary-dark);
+  padding: 2%;
+  padding-bottom: 4%;
+  color: white;
+  width: 30vw;
+  height: 5vh;
+  left: 1vw;
+  top: 10vh;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.fundDashboard {
+  position: fixed;
+  border: 1px solid black;
+  border-radius: 25px;
+  background-color: var(--secondary-dark);
+  width: 30vw;
+  height: 55vh;
+  top: 25vh;
+  left: 1vw;
+  padding: 1%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.fundDashboardSubSections {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  margin: 5% 0%;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+.fundDashboard h3 {
+  color: white;
+}
+.fundDashboardSubSections .row:nth-child(odd) {
+  background-color: var(--primary-light);
+}
+.fundDashboardSubSections .row:nth-child(even) {
+  background-color: white;
+}
+.graphSpace{
+  position: absolute;
+  width: 60vw;
+  height: 85vh;
+  left: 35vw;
+  top: 10vh;
+  overflow-y: scroll;
+}
+.graphContainer {
+  position: relative;
+  padding: 2%;
+  color: white;
+  background-color: var(--secondary-dark);
+  border-radius: 25px;
+  margin-bottom: 5%;
+}
+.graphSpace h4 {
+  color: rgba(2, 0, 36, 1);
+}
+.nav-item{
+  background-color: rgba(0, 202, 249,0.3);
+  margin: 10px;
+  border-radius: 12px;
+  width: 100px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+.nav-item:hover{
+  transform: scale(1.25);
+}
+.builder-nav-item{
+  border-left: 1px solid white;
+  padding-left: 2%;
+  margin-left: 2%;
+}

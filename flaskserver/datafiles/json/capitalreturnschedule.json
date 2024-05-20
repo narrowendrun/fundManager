@@ -1,0 +1,1487 @@
+[
+  {
+    "fund_id": 1,
+    "date": "2023-01-01",
+    "senior": 3588.37,
+    "mezz": 3643.48,
+    "junior": 3252.74,
+    "classa": 9893.78,
+    "classb": 7995.16
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-02",
+    "senior": 7262.52,
+    "mezz": 4952.67,
+    "junior": 5153.36,
+    "classa": 9754.03,
+    "classb": 277.77
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-03",
+    "senior": 7491.2,
+    "mezz": 1293.9,
+    "junior": 3206.42,
+    "classa": 8866.29,
+    "classb": 6912.7
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-04",
+    "senior": 763.13,
+    "mezz": 3188.34,
+    "junior": 7620.57,
+    "classa": 2441.32,
+    "classb": 9418.43
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-05",
+    "senior": 2337.54,
+    "mezz": 9083.46,
+    "junior": 2684.02,
+    "classa": 1662.67,
+    "classb": 2199.5
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-06",
+    "senior": 4554.45,
+    "mezz": 8416.8,
+    "junior": 2711.54,
+    "classa": 2037.63,
+    "classb": 5317.7
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-07",
+    "senior": 1210.59,
+    "mezz": 253.75,
+    "junior": 4120.24,
+    "classa": 200.26,
+    "classb": 9792.16
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-08",
+    "senior": 5957.93,
+    "mezz": 8042.78,
+    "junior": 673.86,
+    "classa": 7442.61,
+    "classb": 7576.27
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-09",
+    "senior": 229.28,
+    "mezz": 1622.56,
+    "junior": 5558.08,
+    "classa": 5550.72,
+    "classb": 4337.53
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-10",
+    "senior": 4931.91,
+    "mezz": 4042.67,
+    "junior": 1658.63,
+    "classa": 2746.05,
+    "classb": 9808.19
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-11",
+    "senior": 2960.03,
+    "mezz": 7440.36,
+    "junior": 3642.15,
+    "classa": 7500.48,
+    "classb": 800.2
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-12",
+    "senior": 6989.58,
+    "mezz": 2615.34,
+    "junior": 5662.15,
+    "classa": 2798.14,
+    "classb": 8431.7
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-13",
+    "senior": 7073.05,
+    "mezz": 4815.04,
+    "junior": 3218.33,
+    "classa": 7278.32,
+    "classb": 6777.53
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-14",
+    "senior": 1083.56,
+    "mezz": 4476.66,
+    "junior": 6716.93,
+    "classa": 4994.51,
+    "classb": 541.07
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-15",
+    "senior": 8058.69,
+    "mezz": 2737.55,
+    "junior": 7277.4,
+    "classa": 6146.58,
+    "classb": 6659.08
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-16",
+    "senior": 1285.06,
+    "mezz": 7033.33,
+    "junior": 7302.34,
+    "classa": 8746.69,
+    "classb": 5638.09
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-17",
+    "senior": 1455.29,
+    "mezz": 3095.42,
+    "junior": 3522.23,
+    "classa": 4174.47,
+    "classb": 7694.1
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-18",
+    "senior": 4626.84,
+    "mezz": 5796.5,
+    "junior": 2968.56,
+    "classa": 6051.88,
+    "classb": 5750.47
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-19",
+    "senior": 2598.33,
+    "mezz": 4150.04,
+    "junior": 4774.14,
+    "classa": 1852.86,
+    "classb": 7978.63
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-20",
+    "senior": 2046.61,
+    "mezz": 7051.08,
+    "junior": 1639.45,
+    "classa": 5614,
+    "classb": 9492.7
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-21",
+    "senior": 4752.79,
+    "mezz": 3846.08,
+    "junior": 164.4,
+    "classa": 4624.04,
+    "classb": 7274.02
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-22",
+    "senior": 3720.3,
+    "mezz": 4570.91,
+    "junior": 4024.26,
+    "classa": 1221.31,
+    "classb": 5755.9
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-23",
+    "senior": 7409.74,
+    "mezz": 3749.26,
+    "junior": 6889.01,
+    "classa": 4396.41,
+    "classb": 9760.51
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-24",
+    "senior": 629.74,
+    "mezz": 6557.14,
+    "junior": 8219.07,
+    "classa": 6078.4,
+    "classb": 2424.14
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-25",
+    "senior": 5197.51,
+    "mezz": 1253.99,
+    "junior": 8950.18,
+    "classa": 7859.61,
+    "classb": 8555.12
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-26",
+    "senior": 7538.14,
+    "mezz": 2877.62,
+    "junior": 2772.76,
+    "classa": 5954.59,
+    "classb": 441.93
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-27",
+    "senior": 9364.6,
+    "mezz": 2508.01,
+    "junior": 9387.65,
+    "classa": 4231.4,
+    "classb": 1734.4
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-28",
+    "senior": 7878.02,
+    "mezz": 8905.62,
+    "junior": 3236.4,
+    "classa": 9184.78,
+    "classb": 6990.43
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-29",
+    "senior": 2129.63,
+    "mezz": 5963.15,
+    "junior": 7040.19,
+    "classa": 2933.63,
+    "classb": 9255.88
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-30",
+    "senior": 2775.39,
+    "mezz": 9009.47,
+    "junior": 177.4,
+    "classa": 3485.65,
+    "classb": 6917.24
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-01-31",
+    "senior": 4764.06,
+    "mezz": 3934.04,
+    "junior": 2805.74,
+    "classa": 7744.3,
+    "classb": 6529.58
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-01",
+    "senior": 6580.7,
+    "mezz": 7149.76,
+    "junior": 4641.44,
+    "classa": 2381.46,
+    "classb": 5008.74
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-02",
+    "senior": 2382.83,
+    "mezz": 9539.26,
+    "junior": 5024.87,
+    "classa": 8997.62,
+    "classb": 9322.54
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-03",
+    "senior": 2050.09,
+    "mezz": 2623.79,
+    "junior": 5564.99,
+    "classa": 5825.43,
+    "classb": 4455.26
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-04",
+    "senior": 7778.23,
+    "mezz": 9078.36,
+    "junior": 9240.48,
+    "classa": 351.98,
+    "classb": 3460.51
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-05",
+    "senior": 4572.42,
+    "mezz": 8187.99,
+    "junior": 3314.24,
+    "classa": 4817.76,
+    "classb": 7853.61
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-06",
+    "senior": 7864.29,
+    "mezz": 5585.22,
+    "junior": 5837.77,
+    "classa": 5118.72,
+    "classb": 2602.25
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-07",
+    "senior": 6577.91,
+    "mezz": 4428.18,
+    "junior": 2643.19,
+    "classa": 1829.23,
+    "classb": 5391.18
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-08",
+    "senior": 5426.1,
+    "mezz": 972.97,
+    "junior": 5498.97,
+    "classa": 7904.41,
+    "classb": 5792.75
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-09",
+    "senior": 8160.38,
+    "mezz": 6076.64,
+    "junior": 5371.53,
+    "classa": 2415.13,
+    "classb": 2189.16
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-10",
+    "senior": 5824.01,
+    "mezz": 9980.92,
+    "junior": 8979.87,
+    "classa": 6780.03,
+    "classb": 44.97
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-11",
+    "senior": 5817.6,
+    "mezz": 2146.12,
+    "junior": 9086,
+    "classa": 7229.49,
+    "classb": 34.52
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-12",
+    "senior": 9423.46,
+    "mezz": 4843.36,
+    "junior": 5299.13,
+    "classa": 5925.99,
+    "classb": 9756.36
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-13",
+    "senior": 8542.84,
+    "mezz": 5320.17,
+    "junior": 9426.07,
+    "classa": 2812.83,
+    "classb": 2441.74
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-14",
+    "senior": 1052.06,
+    "mezz": 1168.08,
+    "junior": 3302.15,
+    "classa": 7939.24,
+    "classb": 6143.39
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-15",
+    "senior": 4919.86,
+    "mezz": 6468.75,
+    "junior": 3943.04,
+    "classa": 8021,
+    "classb": 854.12
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-16",
+    "senior": 4376.43,
+    "mezz": 1544.99,
+    "junior": 1900.31,
+    "classa": 3114.14,
+    "classb": 4286.42
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-17",
+    "senior": 9673.83,
+    "mezz": 5818.84,
+    "junior": 9191.77,
+    "classa": 6189.38,
+    "classb": 1172.92
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-18",
+    "senior": 2298.85,
+    "mezz": 7660.59,
+    "junior": 6681.69,
+    "classa": 2061.73,
+    "classb": 9939.22
+  },
+  {
+    "fund_id": 1,
+    "date": "2023-02-19",
+    "senior": 6759.87,
+    "mezz": 2974.64,
+    "junior": 6356.87,
+    "classa": 392.28,
+    "classb": 6201.78
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-05",
+    "senior": 1261.64,
+    "mezz": 5588.57,
+    "junior": 6535.22,
+    "classa": 211.46,
+    "classb": 1495.88
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-06",
+    "senior": 4632.62,
+    "mezz": 7335.57,
+    "junior": 6212.91,
+    "classa": 6173.96,
+    "classb": 1178.95
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-07",
+    "senior": 3582.99,
+    "mezz": 4033.12,
+    "junior": 6326.98,
+    "classa": 2897.25,
+    "classb": 6856.03
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-08",
+    "senior": 9093.21,
+    "mezz": 8587.15,
+    "junior": 1113.39,
+    "classa": 7515.76,
+    "classb": 6663.36
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-09",
+    "senior": 4908.95,
+    "mezz": 5848.01,
+    "junior": 7320.89,
+    "classa": 7876.88,
+    "classb": 9223.92
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-10",
+    "senior": 8972.11,
+    "mezz": 2837.68,
+    "junior": 9692.92,
+    "classa": 3587.32,
+    "classb": 8621.06
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-11",
+    "senior": 4732.51,
+    "mezz": 8525.4,
+    "junior": 9161.02,
+    "classa": 5935.65,
+    "classb": 7862.78
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-12",
+    "senior": 8947.4,
+    "mezz": 4039.38,
+    "junior": 1404.34,
+    "classa": 5941.44,
+    "classb": 7760.77
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-13",
+    "senior": 4290.78,
+    "mezz": 6585.33,
+    "junior": 7946.15,
+    "classa": 7504.22,
+    "classb": 8653.12
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-14",
+    "senior": 3749.36,
+    "mezz": 6875.92,
+    "junior": 407.67,
+    "classa": 4589.72,
+    "classb": 4782.18
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-15",
+    "senior": 4499.81,
+    "mezz": 5097.18,
+    "junior": 7756.07,
+    "classa": 4455.53,
+    "classb": 8028.92
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-16",
+    "senior": 5745.86,
+    "mezz": 7029.7,
+    "junior": 6846.31,
+    "classa": 2082.38,
+    "classb": 1175.5
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-17",
+    "senior": 4822.53,
+    "mezz": 8780.79,
+    "junior": 5364.33,
+    "classa": 7070.7,
+    "classb": 1951.97
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-18",
+    "senior": 7982.05,
+    "mezz": 7282.42,
+    "junior": 3510.89,
+    "classa": 3963.66,
+    "classb": 5149.15
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-19",
+    "senior": 3897.02,
+    "mezz": 278.18,
+    "junior": 3631.91,
+    "classa": 9870.67,
+    "classb": 7401.06
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-20",
+    "senior": 1858.57,
+    "mezz": 4276.13,
+    "junior": 5279.74,
+    "classa": 2337.45,
+    "classb": 2924.24
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-21",
+    "senior": 2591.36,
+    "mezz": 6922.37,
+    "junior": 964.02,
+    "classa": 45.7,
+    "classb": 7174.37
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-22",
+    "senior": 128.34,
+    "mezz": 5900.68,
+    "junior": 673.86,
+    "classa": 3722.12,
+    "classb": 8435.33
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-23",
+    "senior": 7017.63,
+    "mezz": 479.93,
+    "junior": 6379.91,
+    "classa": 4682.65,
+    "classb": 3312.82
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-24",
+    "senior": 4283.16,
+    "mezz": 4515.78,
+    "junior": 162.1,
+    "classa": 8765.56,
+    "classb": 989.35
+  },
+  {
+    "fund_id": 2,
+    "date": "2023-05-25",
+    "senior": 1455.91,
+    "mezz": 4387.12,
+    "junior": 247.72,
+    "classa": 9149.45,
+    "classb": 235.73
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-02",
+    "senior": 853.77,
+    "mezz": 6804.96,
+    "junior": 5448.84,
+    "classa": 7008.59,
+    "classb": 4887.44
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-03",
+    "senior": 1542.15,
+    "mezz": 8571.16,
+    "junior": 4037.86,
+    "classa": 7764.17,
+    "classb": 4733.65
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-04",
+    "senior": 3982.74,
+    "mezz": 8645.93,
+    "junior": 1473.03,
+    "classa": 5907.48,
+    "classb": 6791.54
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-05",
+    "senior": 5297.7,
+    "mezz": 1338.08,
+    "junior": 1916.95,
+    "classa": 8323.94,
+    "classb": 6685.87
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-06",
+    "senior": 4826.99,
+    "mezz": 8523.06,
+    "junior": 7005.41,
+    "classa": 7342.68,
+    "classb": 2760.85
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-07",
+    "senior": 1369.34,
+    "mezz": 9465.39,
+    "junior": 7416.19,
+    "classa": 5925.89,
+    "classb": 6069.02
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-08",
+    "senior": 41.5,
+    "mezz": 7666.29,
+    "junior": 6965.23,
+    "classa": 3345.33,
+    "classb": 4589.81
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-09",
+    "senior": 9355.09,
+    "mezz": 2663.97,
+    "junior": 8444.28,
+    "classa": 5662.77,
+    "classb": 9211.38
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-10",
+    "senior": 7577.54,
+    "mezz": 145.63,
+    "junior": 6461.33,
+    "classa": 3665.9,
+    "classb": 4201.83
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-11",
+    "senior": 9371.48,
+    "mezz": 3229.49,
+    "junior": 8663.97,
+    "classa": 2760.8,
+    "classb": 9943.53
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-12",
+    "senior": 4246.03,
+    "mezz": 3857.22,
+    "junior": 2323.54,
+    "classa": 2896.55,
+    "classb": 402.91
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-13",
+    "senior": 6533.66,
+    "mezz": 9904.79,
+    "junior": 6706.81,
+    "classa": 7244.28,
+    "classb": 326.07
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-14",
+    "senior": 4552.07,
+    "mezz": 9886.66,
+    "junior": 6914.11,
+    "classa": 2354.85,
+    "classb": 6940.44
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-15",
+    "senior": 9141.03,
+    "mezz": 794.08,
+    "junior": 2263.34,
+    "classa": 5613.71,
+    "classb": 5930.23
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-16",
+    "senior": 7960.63,
+    "mezz": 5716.84,
+    "junior": 3335.29,
+    "classa": 8958.3,
+    "classb": 7369.33
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-17",
+    "senior": 6862.29,
+    "mezz": 335,
+    "junior": 9062.16,
+    "classa": 6821.68,
+    "classb": 3545.4
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-18",
+    "senior": 3421.6,
+    "mezz": 8654.23,
+    "junior": 2976.85,
+    "classa": 8394.46,
+    "classb": 6177.12
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-19",
+    "senior": 778.01,
+    "mezz": 1731.23,
+    "junior": 4854.24,
+    "classa": 4189.07,
+    "classb": 4933.3
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-20",
+    "senior": 7236.67,
+    "mezz": 2579.93,
+    "junior": 529.05,
+    "classa": 5449.85,
+    "classb": 7597.25
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-21",
+    "senior": 852.02,
+    "mezz": 8416.98,
+    "junior": 2367.48,
+    "classa": 9146.49,
+    "classb": 491.7
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-22",
+    "senior": 7420.97,
+    "mezz": 496.86,
+    "junior": 8131.53,
+    "classa": 9241.9,
+    "classb": 1836.26
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-23",
+    "senior": 7261.18,
+    "mezz": 5762.56,
+    "junior": 8816.28,
+    "classa": 9789.39,
+    "classb": 6988.24
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-24",
+    "senior": 3981.09,
+    "mezz": 554.92,
+    "junior": 6904.47,
+    "classa": 3044.64,
+    "classb": 1503.46
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-25",
+    "senior": 415.36,
+    "mezz": 9691.14,
+    "junior": 4873.18,
+    "classa": 5336.25,
+    "classb": 5839.6
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-26",
+    "senior": 7042.39,
+    "mezz": 6410.29,
+    "junior": 8535.54,
+    "classa": 6562.2,
+    "classb": 9964.17
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-27",
+    "senior": 4753.11,
+    "mezz": 9670.38,
+    "junior": 3372.97,
+    "classa": 2467.24,
+    "classb": 3612.61
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-28",
+    "senior": 706.29,
+    "mezz": 7440.31,
+    "junior": 2354.61,
+    "classa": 5940.45,
+    "classb": 4399.66
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-29",
+    "senior": 4216.31,
+    "mezz": 4834.64,
+    "junior": 8667.65,
+    "classa": 7144.62,
+    "classb": 6786.5
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-30",
+    "senior": 9758.87,
+    "mezz": 7920.95,
+    "junior": 51.57,
+    "classa": 2979.24,
+    "classb": 3464.44
+  },
+  {
+    "fund_id": 3,
+    "date": "2024-01-31",
+    "senior": 2307.98,
+    "mezz": 9106.62,
+    "junior": 6133.33,
+    "classa": 4477.16,
+    "classb": 4522.08
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-11-29",
+    "senior": 3893.49,
+    "mezz": 619.81,
+    "junior": 4173.21,
+    "classa": 8285.03,
+    "classb": 6657.14
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-11-30",
+    "senior": 7846.97,
+    "mezz": 2099.77,
+    "junior": 8405.65,
+    "classa": 3251.93,
+    "classb": 8820.91
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-01",
+    "senior": 2618.97,
+    "mezz": 2106.58,
+    "junior": 1218.46,
+    "classa": 3261.61,
+    "classb": 6592.54
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-02",
+    "senior": 3883.09,
+    "mezz": 429.54,
+    "junior": 7449.44,
+    "classa": 2330.28,
+    "classb": 2520.71
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-03",
+    "senior": 6323.79,
+    "mezz": 8585.9,
+    "junior": 1642.79,
+    "classa": 6556.45,
+    "classb": 8165.52
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-04",
+    "senior": 3064.47,
+    "mezz": 9633.55,
+    "junior": 5422.19,
+    "classa": 4766.42,
+    "classb": 4961.82
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-05",
+    "senior": 533.18,
+    "mezz": 271.11,
+    "junior": 8640.58,
+    "classa": 1950.27,
+    "classb": 9672.23
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-06",
+    "senior": 8298.62,
+    "mezz": 1144.94,
+    "junior": 9743.34,
+    "classa": 6482.63,
+    "classb": 9680.99
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-07",
+    "senior": 1866.13,
+    "mezz": 3704.62,
+    "junior": 4115.45,
+    "classa": 5691.44,
+    "classb": 9998.2
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-08",
+    "senior": 4472.34,
+    "mezz": 5283.96,
+    "junior": 15.42,
+    "classa": 9011.11,
+    "classb": 1355.04
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-09",
+    "senior": 3862.89,
+    "mezz": 8360.07,
+    "junior": 2845.03,
+    "classa": 2335.72,
+    "classb": 5350.09
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-10",
+    "senior": 847.32,
+    "mezz": 8788.7,
+    "junior": 4044.85,
+    "classa": 7229.12,
+    "classb": 2548.28
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-11",
+    "senior": 7158.35,
+    "mezz": 1109.3,
+    "junior": 6226.9,
+    "classa": 3561.5,
+    "classb": 6207.6
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-12",
+    "senior": 6493.11,
+    "mezz": 414,
+    "junior": 3676.27,
+    "classa": 368.71,
+    "classb": 8138.11
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-13",
+    "senior": 2526.82,
+    "mezz": 8384.31,
+    "junior": 2041.37,
+    "classa": 4904.9,
+    "classb": 5370.44
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-14",
+    "senior": 3624.71,
+    "mezz": 7159.68,
+    "junior": 6382.24,
+    "classa": 7728.98,
+    "classb": 4036.09
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-15",
+    "senior": 3377.55,
+    "mezz": 6199.31,
+    "junior": 925.14,
+    "classa": 516.02,
+    "classb": 6494.67
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-16",
+    "senior": 8254.86,
+    "mezz": 5973.51,
+    "junior": 7349.01,
+    "classa": 4466.43,
+    "classb": 823.01
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-17",
+    "senior": 255.34,
+    "mezz": 6614.27,
+    "junior": 8415.29,
+    "classa": 6903.84,
+    "classb": 7331.23
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-18",
+    "senior": 331.95,
+    "mezz": 5696.7,
+    "junior": 7380.58,
+    "classa": 254.1,
+    "classb": 4922.5
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-19",
+    "senior": 7868.11,
+    "mezz": 1120.15,
+    "junior": 848.69,
+    "classa": 8142.92,
+    "classb": 6132.76
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-20",
+    "senior": 9101.61,
+    "mezz": 3619.47,
+    "junior": 1426.21,
+    "classa": 7305.26,
+    "classb": 4096.33
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-21",
+    "senior": 1852.09,
+    "mezz": 6113.13,
+    "junior": 6597.78,
+    "classa": 8499.63,
+    "classb": 4172.86
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-22",
+    "senior": 5297.92,
+    "mezz": 2490.56,
+    "junior": 9447.85,
+    "classa": 9730.47,
+    "classb": 8414.95
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-23",
+    "senior": 9780.46,
+    "mezz": 8813.79,
+    "junior": 1255.56,
+    "classa": 4141.89,
+    "classb": 2972.52
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-24",
+    "senior": 2838.47,
+    "mezz": 2029.2,
+    "junior": 8113.17,
+    "classa": 4072.46,
+    "classb": 6899.73
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-25",
+    "senior": 8363,
+    "mezz": 8297.07,
+    "junior": 6773.42,
+    "classa": 5175.87,
+    "classb": 5255.21
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-26",
+    "senior": 5773.43,
+    "mezz": 3932.08,
+    "junior": 7266.98,
+    "classa": 9433.94,
+    "classb": 7119.59
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-27",
+    "senior": 6071.08,
+    "mezz": 1754.21,
+    "junior": 3182.17,
+    "classa": 8261.37,
+    "classb": 2614.77
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-28",
+    "senior": 4535.06,
+    "mezz": 8716.83,
+    "junior": 7041.08,
+    "classa": 3323.93,
+    "classb": 4928.39
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-29",
+    "senior": 9906.41,
+    "mezz": 641.63,
+    "junior": 5526.31,
+    "classa": 458.49,
+    "classb": 6793.95
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-30",
+    "senior": 1169.84,
+    "mezz": 4319,
+    "junior": 8962.26,
+    "classa": 7304.8,
+    "classb": 2933.05
+  },
+  {
+    "fund_id": 4,
+    "date": "2023-12-31",
+    "senior": 4223.8,
+    "mezz": 1320.22,
+    "junior": 3803.02,
+    "classa": 7620.22,
+    "classb": 1910.25
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-01",
+    "senior": 9735.93,
+    "mezz": 641.85,
+    "junior": 564.64,
+    "classa": 982.29,
+    "classb": 4273.59
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-02",
+    "senior": 3584.15,
+    "mezz": 5398.15,
+    "junior": 5969.18,
+    "classa": 7844.48,
+    "classb": 1156.27
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-03",
+    "senior": 2845.77,
+    "mezz": 6879.7,
+    "junior": 7271.49,
+    "classa": 7761.97,
+    "classb": 6868.71
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-04",
+    "senior": 5874.93,
+    "mezz": 2908.63,
+    "junior": 2065.01,
+    "classa": 8416.16,
+    "classb": 7829.94
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-05",
+    "senior": 2265.15,
+    "mezz": 2689.71,
+    "junior": 6049.24,
+    "classa": 5169.32,
+    "classb": 7835.62
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-06",
+    "senior": 4371.71,
+    "mezz": 7240.3,
+    "junior": 4961.46,
+    "classa": 5893.62,
+    "classb": 9056.61
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-07",
+    "senior": 3290.11,
+    "mezz": 3618.87,
+    "junior": 2330.61,
+    "classa": 3125.99,
+    "classb": 7636.12
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-08",
+    "senior": 1159.35,
+    "mezz": 1353.51,
+    "junior": 1586.41,
+    "classa": 5017.37,
+    "classb": 3447.11
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-09",
+    "senior": 3462,
+    "mezz": 1707.85,
+    "junior": 8634.36,
+    "classa": 7275.58,
+    "classb": 4346.1
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-10",
+    "senior": 176.76,
+    "mezz": 6130.03,
+    "junior": 9293.72,
+    "classa": 5844.03,
+    "classb": 6046.89
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-11",
+    "senior": 4105.59,
+    "mezz": 5149.77,
+    "junior": 265.42,
+    "classa": 800.98,
+    "classb": 4911.33
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-12",
+    "senior": 7042.08,
+    "mezz": 992.45,
+    "junior": 9539.22,
+    "classa": 6740.36,
+    "classb": 5281.89
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-13",
+    "senior": 2648,
+    "mezz": 5196.53,
+    "junior": 9453.77,
+    "classa": 6867.87,
+    "classb": 8364.45
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-14",
+    "senior": 8358.99,
+    "mezz": 5374.19,
+    "junior": 4601.27,
+    "classa": 6824.87,
+    "classb": 4861.49
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-15",
+    "senior": 8067,
+    "mezz": 3250.48,
+    "junior": 4685.52,
+    "classa": 7219.27,
+    "classb": 5667.63
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-16",
+    "senior": 4159.5,
+    "mezz": 4809.16,
+    "junior": 9774.31,
+    "classa": 7236.3,
+    "classb": 6581.23
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-17",
+    "senior": 5900.75,
+    "mezz": 7982.57,
+    "junior": 1100.21,
+    "classa": 8044.63,
+    "classb": 8450.79
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-18",
+    "senior": 9919.84,
+    "mezz": 3836.69,
+    "junior": 466.48,
+    "classa": 9765.42,
+    "classb": 8155.96
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-19",
+    "senior": 1709.15,
+    "mezz": 8265.85,
+    "junior": 1388.27,
+    "classa": 7218.5,
+    "classb": 9680.26
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-20",
+    "senior": 5766.78,
+    "mezz": 7481.48,
+    "junior": 802.56,
+    "classa": 1339.53,
+    "classb": 9242.33
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-21",
+    "senior": 7798.02,
+    "mezz": 7244.71,
+    "junior": 4240.89,
+    "classa": 2671.59,
+    "classb": 9868.23
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-22",
+    "senior": 9299.54,
+    "mezz": 5578.18,
+    "junior": 2679.58,
+    "classa": 7437.12,
+    "classb": 1969.34
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-23",
+    "senior": 1394.34,
+    "mezz": 674.28,
+    "junior": 106.13,
+    "classa": 7999.45,
+    "classb": 3375.29
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-24",
+    "senior": 9272.75,
+    "mezz": 7877.39,
+    "junior": 4411.11,
+    "classa": 9476.31,
+    "classb": 3034.47
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-25",
+    "senior": 8695.77,
+    "mezz": 6113.31,
+    "junior": 6722.15,
+    "classa": 1565.09,
+    "classb": 7630.26
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-26",
+    "senior": 2259.89,
+    "mezz": 9814.1,
+    "junior": 8949.56,
+    "classa": 4715.87,
+    "classb": 8843.36
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-27",
+    "senior": 7615.28,
+    "mezz": 1148.43,
+    "junior": 968.7,
+    "classa": 103.79,
+    "classb": 9562.17
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-28",
+    "senior": 5540.69,
+    "mezz": 7566.51,
+    "junior": 8672.27,
+    "classa": 288.41,
+    "classb": 4534.12
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-29",
+    "senior": 8316.9,
+    "mezz": 8732.73,
+    "junior": 9245.48,
+    "classa": 8137.29,
+    "classb": 5484.3
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-30",
+    "senior": 1684.41,
+    "mezz": 9013.63,
+    "junior": 7491.78,
+    "classa": 114.77,
+    "classb": 948.17
+  },
+  {
+    "fund_id": 4,
+    "date": "2024-01-31",
+    "senior": 9408.97,
+    "mezz": 6260.85,
+    "junior": 7500.8,
+    "classa": 3954.6,
+    "classb": 4270.71
+  }
+]
