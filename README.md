@@ -18,6 +18,6 @@ To deploy this project run
 
 
 ## 🛠 Skills
-React, PSQL
+React, PSQL, JavaScript, Python
 
 
