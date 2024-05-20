@@ -1,5 +1,5 @@
-import DebtDataHeadings from "./debtDataHeadings";
-import EquityDataHeadings from "./equityDataHeadings";
+import DebtDataHeadings from "./headings/debtDataHeadings";
+import EquityDataHeadings from "./headings/equityDataHeadings";
 
 export default function FundDashboard({ fundData, debtData, equityData }) {
   const numberFormat = (value) =>
@@ -61,9 +61,6 @@ export default function FundDashboard({ fundData, debtData, equityData }) {
                 <div className="row">
                   <div className="col">{item.debt_type}</div>
                 </div>
-                {/* <div className="row">
-                  <div className="col">{item.debt_equity_ratio}</div>
-                </div> */}
                 <div className="row">
                   <div className="col">{item.interest_rate}%</div>
                 </div>

@@ -1,5 +1,5 @@
 import Navbar from "../navbar";
-import FeeScheduleGraphs from "./fsGraphs";
+import FeeScheduleGraphs from "./feeSchedule";
 
 export default function App() {
   const fundID = 1;

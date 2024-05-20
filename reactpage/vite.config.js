@@ -19,8 +19,15 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(root, "index.html"),
-        capitalschedule: resolve(root, "capitalschedule", "index.html"),
-        cashflowschedule: resolve(root, "cashflowschedule", "index.html"),
+        capitalschedule: resolve(root, "capitalschedule/index.html"),
+        cashflowschedule: resolve(root, "cashflowschedule/index.html"),
+        feeschedule: resolve(root, "feeschedule/index.html"),
+      },
+      output: {
+        // Ensure the correct path structure is maintained
+        entryFileNames: "[name]/[name].js",
+        chunkFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]",
       },
     },
   },

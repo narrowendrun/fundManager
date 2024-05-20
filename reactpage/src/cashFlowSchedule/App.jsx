@@ -1,5 +1,5 @@
 import Navbar from "../navbar";
-import CashFlowGraphs from "./cfGraphs";
+import CashFlowGraphs from "./cashFlowSchedule";
 
 export default function App() {
   const fundID = 1;

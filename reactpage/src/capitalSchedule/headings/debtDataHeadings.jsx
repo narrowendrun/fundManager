@@ -10,9 +10,6 @@ export default function DebtDataHeadings() {
         >
           <div className="col">.</div>
         </div>
-        {/* <div className="row">
-          <div className="col">debt : equity</div>
-        </div> */}
         <div className="row">
           <div className="col">interest</div>
         </div>
