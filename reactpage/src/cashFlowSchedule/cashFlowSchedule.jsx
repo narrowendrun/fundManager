@@ -21,7 +21,8 @@ export default function CashFlowGraphs({ fundID }) {
         updateRawData(table, data, setData)
       );
     });
-  }, []);
+  }, [fundID]);
+  console.log("dataset :", allData.cashflow_schedule);
   return (
     <>
       <GraphOutput CFdataset={allData.cashflow_schedule.dataset} />

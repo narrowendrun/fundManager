@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "./images/logo.png";
-import { useFund } from "./FundContext";
-export default function Navbar() {
-  // const { fundID, setFundID } = useFund();
-  const [fundList, setFundList] = useState([1, 2, 3, 4]);
-  const [fundName, setFundName] = useState("1");
+import { postQuery } from "./functions";
+export default function Navbar({ fundID, setFundID }) {
+  const [fundList, setFundList] = useState([]);
+  const [fundName, setFundName] = useState("");
   const handleFundChange = (item) => {
-    setFundID(item);
-    setFundName(item);
-    console.log(item);
+    setFundID(item.fund_id);
+    setFundName(item.name);
   };
+  useEffect(() => {
+    postQuery(
+      { query: `SELECT fund_id, name FROM fund_information` },
+      setFundList
+    );
+  }, []);
+  useEffect(() => {
+    if (fundList.length) {
+      setFundName(fundList[0].name);
+      setFundID(fundList[0].fund_id);
+    }
+  }, [fundList]);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,39 +46,36 @@ export default function Navbar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
+              <li className="nav-item nav-item-magnify">
                 <a className="nav-link active" aria-current="page" href="/">
                   Home
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-magnify">
                 <a className="nav-link active" href="/capitalschedule/">
                   Capital
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-magnify">
                 <a className="nav-link active" href="/cashflowschedule/">
                   CashFlow
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-magnify">
                 <a className="nav-link active" href="/feeschedule/">
                   Fee
                 </a>
               </li>
 
               <div className="builder-nav-item">
-                <li className="nav-item ">
+                <li className="nav-item nav-item-magnify ">
                   <a className="nav-link active" href="#">
                     Builder
                   </a>
                 </li>
               </div>
 
-              <li
-                className="nav-item dropdown"
-                style={{ position: "absolute", right: "10px" }}
-              >
+              <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -79,27 +87,22 @@ export default function Navbar() {
                 >
                   {fundName}
                 </a>
-                {/* <ul
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdown"
-                  style={{ position: "relative", right: "5px", zIndex: "500" }}
-                >
-                  {fundList.map((item) => {
-                    return (
-                      <>
-                        <li key={`item${item}`}>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {fundList.length &&
+                    fundList.map((item) => {
+                      return (
+                        <li key={item.fund_id}>
                           <a
                             className="dropdown-item"
                             href="#"
                             onClick={() => handleFundChange(item)}
                           >
-                            {item}
+                            {item.name}
                           </a>
                         </li>
-                      </>
-                    );
-                  })}
-                </ul> */}
+                      );
+                    })}
+                </ul>
               </li>
             </ul>
           </div>

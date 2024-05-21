@@ -63,7 +63,7 @@ export default function CapitalSchedule({ fundID }) {
         updateRawData(table, data, setData)
       );
     });
-  }, []);
+  }, [fundID]);
   return (
     <>
       <div className="row">

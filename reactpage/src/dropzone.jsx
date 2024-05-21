@@ -7,13 +7,18 @@ export default function FileDropzone() {
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [returnUploadStatus, setReturnUploadStatus] = useState(500);
+  const [returnFileResult, setReturnFileResult] = useState("");
   const [deploymentUploadStatus, setDeploymentUploadStatus] = useState(500);
-  const [outstandingBalanceResult, setOutstandingBalanceResult] = useState("");
+  const [deploymentFileResult, setDeploymentFileResult] = useState("");
   const [outstandingBalanceStatus, setOutstandingBalanceStatus] = useState(500);
+  const [outstandingBalanceResult, setOutstandingBalanceResult] = useState("");
   const [costOfCapitalStatus, setCostOfCapitalStatus] = useState(500);
   const [costOfCapitalResult, setCostOfCapitalResult] = useState("");
-  const [returnFileResult, setReturnFileResult] = useState("");
-  const [deploymentFileResult, setDeploymentFileResult] = useState("");
+  const [cashFlowStatus, setCashFlowStatus] = useState(500);
+  const [cashFlowResult, setCashFlowResult] = useState("");
+  const [feeScheduleStatus, setFeeScheduleStatus] = useState(500);
+  const [feeScheduleResult, setFeeScheduleResult] = useState("");
+
   const [dropStyle, setDropStyle] = useState({
     backgroundColor: "white",
     padding: "5%",
@@ -53,6 +58,10 @@ export default function FileDropzone() {
           setOutstandingBalanceStatus(response.status);
         } else if (file === "costofcapital.sql") {
           setCostOfCapitalStatus(response.status);
+        } else if (file === "cashflow_schedule.sql") {
+          setCashFlowStatus(response.status);
+        } else if (file === "fee_schedule.sql") {
+          setFeeScheduleStatus(response.status);
         }
         return response.text();
       })
@@ -63,6 +72,10 @@ export default function FileDropzone() {
           setOutstandingBalanceResult(parsedResult.output);
         } else if (file === "costofcapital.sql") {
           setCostOfCapitalResult(parsedResult.output);
+        } else if (file === "cashflow_schedule.sql") {
+          setCashFlowResult(parsedResult.output);
+        } else if (file === "fee_schedule.sql") {
+          setFeeScheduleResult(parsedResult.output);
         }
       })
       .catch((error) => console.log("error", error));
@@ -111,6 +124,18 @@ export default function FileDropzone() {
       executeSqlFile("costofcapital.sql");
     }
   }, [outstandingBalanceStatus]);
+  useEffect(() => {
+    console.log("costofcapital:", costOfCapitalStatus);
+    if (costOfCapitalStatus === 200) {
+      executeSqlFile("cashflow_schedule.sql");
+    }
+  }, [costOfCapitalStatus]);
+  useEffect(() => {
+    console.log("cashflowschedule:", cashFlowStatus);
+    if (cashFlowStatus === 200) {
+      executeSqlFile("fee_schedule.sql");
+    }
+  }, [cashFlowStatus]);
   const onDrop = useCallback(
     (acceptedFiles) => {
       let newUploadedFiles = [...uploadedFiles];
@@ -183,7 +208,7 @@ export default function FileDropzone() {
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <p>Drop your files here</p>
           )}
           <p>{errorMessage != "" ? errorMessage : ""}</p>
           <p>
@@ -210,12 +235,20 @@ export default function FileDropzone() {
                   ? "block"
                   : "none"
               }`,
+              height: "30vh",
+              overflow: "scroll",
             }}
           >
             <p>{deploymentFileResult}</p>
             <p>{returnFileResult}</p>
+            <p>capitaloutstandingbalance :</p>
             <p>{outstandingBalanceResult}</p>
+            <p>costofcapital :</p>
             <p>{costOfCapitalResult}</p>
+            <p>cashflow :</p>
+            <p>{cashFlowResult}</p>
+            <p>feeschedule :</p>
+            <p>{feeScheduleResult}</p>
           </div>
         </div>
         <br />

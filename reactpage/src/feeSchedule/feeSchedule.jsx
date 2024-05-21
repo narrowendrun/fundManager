@@ -22,7 +22,7 @@ export default function FeeScheduleGraphs({ fundID }) {
         updateRawData(table, data, setData)
       );
     });
-  }, []);
+  }, [fundID]);
   return (
     <>
       <GraphOutput fsDataset={allData.fee_schedule.dataset} />

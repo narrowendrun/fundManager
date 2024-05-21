@@ -27,39 +27,33 @@ export function querier(table, fundID, fields) {
     return { query: `SELECT ${fields} FROM ${table} WHERE fund_id=${fundID}` };
   }
 }
-function updateDataset(updatedData, table, setData) {
+function updateDataset(rawData) {
   const newDataset = {};
   // Get the existing fields from the dataset
-  const fields = Object.keys(updatedData[table].dataset);
+  const fields = Object.keys(rawData[0]);
   // Initialize newDataset with empty arrays for each field
   fields.forEach((field) => {
     newDataset[field] = [];
   });
   // Populate newDataset with values from rawData
-  updatedData[table].rawData.forEach((entry) => {
+  rawData.forEach((entry) => {
     fields.forEach((field) => {
       newDataset[field].push(entry[field]);
     });
   });
-  setData((prevState) => ({
-    ...prevState,
-    [table]: {
-      ...prevState[table],
-      dataset: newDataset,
-    },
-  }));
+  return newDataset;
 }
 export function updateRawData(table, newRawData, setData) {
+  const newDataset = updateDataset(newRawData);
   setData((prevData) => {
     const updatedData = {
       ...prevData,
       [table]: {
         ...prevData[table],
         rawData: newRawData,
+        dataset: newDataset,
       },
     };
-    // Run updateDataset after setting rawData
-    updateDataset(updatedData, table, setData);
     return updatedData;
   });
 }

@@ -1,17 +1,15 @@
+import { useEffect, useState } from "react";
 import Navbar from "../navbar";
 import CashFlowGraphs from "./cashFlowSchedule";
 
 export default function App() {
-  const fundID = 1;
+  const [fundID, setFundID] = useState(3);
+  useEffect(() => {
+    console.log(fundID);
+  }, [fundID]);
   return (
     <>
-      <Navbar />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
+      <Navbar fundID={fundID} setFundID={setFundID} />
       <div className="container">
         <CashFlowGraphs fundID={fundID} />
       </div>

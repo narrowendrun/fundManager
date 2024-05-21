@@ -32,7 +32,7 @@ export default function GraphModule({ options, title, debt }) {
       <div
         className="graphContainer container"
         style={{
-          transform: "translateY(1%)",
+          transform: "translateY(12%)",
         }}
       >
         <center>
@@ -41,7 +41,7 @@ export default function GraphModule({ options, title, debt }) {
         <br />
         <div className="container" style={graphStyle}>
           <h4> Debt Charts ({title})</h4>
-          <Line data={debt} options={options} />
+          <Bar data={debt} options={options} />
         </div>
       </div>
     </>

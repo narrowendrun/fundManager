@@ -36,7 +36,7 @@ export default function GraphModule({ options, title, debt, equity }) {
         <br />
         <div className="container" style={graphStyle}>
           <h4> Debt Charts ({title})</h4>
-          <Line data={debt} options={options} />
+          <Bar data={debt} options={options} />
         </div>
         <br />
         <div className="container" style={graphStyle}>

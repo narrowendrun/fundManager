@@ -27,6 +27,7 @@ body {
   top:0;
   left: 0;
   width: 100vw;
+  z-index: 500;
 }
 .fundName{
   position: fixed;  
@@ -77,6 +78,7 @@ body {
   left: 35vw;
   top: 10vh;
   overflow-y: scroll;
+  z-index: 1;
 }
 .graphContainer {
   position: relative;
@@ -85,6 +87,7 @@ body {
   background-color: var(--secondary-dark);
   border-radius: 25px;
   margin-bottom: 5%;
+  z-index: 1;
 }
 .graphSpace h4 {
   color: rgba(2, 0, 36, 1);
@@ -97,11 +100,26 @@ body {
   text-align: center;
   transition: all 0.2s ease;
 }
-.nav-item:hover{
+.nav-item-magnify:hover{
   transform: scale(1.25);
 }
 .builder-nav-item{
   border-left: 1px solid white;
   padding-left: 2%;
   margin-left: 2%;
+}
+.dropdown{
+  position: absolute;
+  right: 10px;
+  width: 300px;
+}
+.dropdown-toggle{
+  color: white;
+}
+.dropdown-toggle:hover{
+  color: white;
+}
+.dropdown-menu{
+  position: relative;
+  width: 100%;
 }
