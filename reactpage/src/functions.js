@@ -61,3 +61,8 @@ export const getInitialFundID = () => {
   const savedFundID = localStorage.getItem("fundID");
   return savedFundID ? parseInt(savedFundID, 10) : 1;
 };
+export const numberFormat = (value) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);

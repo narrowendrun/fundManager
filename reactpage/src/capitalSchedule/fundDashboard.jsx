@@ -1,12 +1,33 @@
 import DebtDataHeadings from "./headings/debtDataHeadings";
 import EquityDataHeadings from "./headings/equityDataHeadings";
-
-export default function FundDashboard({ fundData, debtData, equityData }) {
-  const numberFormat = (value) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(value);
+import { numberFormat } from "../functions";
+export default function FundDashboard({
+  fundData,
+  debtData,
+  equityData,
+  selection,
+  setSelection,
+  chartName,
+}) {
+  function changeSelection(type) {
+    let currSelection = selection;
+    if (type == "+") {
+      console.log("+");
+      if (currSelection != 3) {
+        setSelection(currSelection + 1);
+      } else {
+        setSelection(0);
+      }
+    }
+    if (type == "-") {
+      console.log("-");
+      if (currSelection != 0) {
+        setSelection(currSelection - 1);
+      } else {
+        setSelection(3);
+      }
+    }
+  }
   return (
     <>
       <div className="fundName">
@@ -105,6 +126,17 @@ export default function FundDashboard({ fundData, debtData, equityData }) {
             );
           })}
         </div>
+      </div>
+      <div className="fundName chartName">
+        <div
+          className="btn btn-primary"
+          onClick={() => changeSelection("-")}
+        >{`<`}</div>
+        <h3>{chartName}</h3>
+        <div
+          className="btn btn-primary"
+          onClick={() => changeSelection("+")}
+        >{`>`}</div>
       </div>
     </>
   );

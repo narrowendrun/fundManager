@@ -8,6 +8,7 @@ export default function CapitalSchedule({ fundID }) {
   const [equityData, setEquityData] = useState([]);
   const [allData, setData] = useState({
     capitaldeploymentschedule: {
+      title: "Capital Deployment Schedule",
       rawData: [],
       dataset: {
         date: [],
@@ -19,6 +20,7 @@ export default function CapitalSchedule({ fundID }) {
       },
     },
     capitalreturnschedule: {
+      title: "Capital Return Schedule",
       rawData: [],
       dataset: {
         date: [],
@@ -30,6 +32,7 @@ export default function CapitalSchedule({ fundID }) {
       },
     },
     capitaloutstandingbalance: {
+      title: "Capital Outstanding Balance",
       rawData: [],
       dataset: {
         date: [],
@@ -41,6 +44,7 @@ export default function CapitalSchedule({ fundID }) {
       },
     },
     costofcapital: {
+      title: "Cost of Capital",
       rawData: [],
       dataset: {
         date: [],
@@ -53,7 +57,7 @@ export default function CapitalSchedule({ fundID }) {
       },
     },
   });
-
+  const [selection, setSelection] = useState(1);
   useEffect(() => {
     postQuery(querier("fund_information", fundID), setFundData);
     postQuery(querier("debt_structure", fundID), setDebtData);
@@ -72,14 +76,15 @@ export default function CapitalSchedule({ fundID }) {
             fundData={fundData}
             debtData={debtData}
             equityData={equityData}
+            selection={selection}
+            setSelection={setSelection}
+            chartName={allData[Object.keys(allData)[selection]].title}
           />
         </div>
         <div className="col">
           <GraphOutput
-            CDdataset={allData.capitaldeploymentschedule.dataset}
-            CRdataset={allData.capitalreturnschedule.dataset}
-            COBdataset={allData.capitaloutstandingbalance.dataset}
-            COCdataset={allData.costofcapital.dataset}
+            Dataset={allData[Object.keys(allData)[selection]].dataset}
+            title={allData[Object.keys(allData)[selection]].title}
           />
         </div>
       </div>

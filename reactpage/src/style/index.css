@@ -17,20 +17,21 @@
     rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }
 body {
-  background:#09203f;
+  background: #09203f;
   background-image: url(../images/bg.png);
   background-repeat: no-repeat;
   overflow: hidden;
 }
-.navbar{
+.navbar {
   position: fixed;
-  top:0;
+  top: 0;
   left: 0;
   width: 100vw;
   z-index: 500;
 }
-.fundName{
-  position: fixed;  
+.fundName,
+.chartName {
+  position: fixed;
   background-color: var(--primary-dark);
   padding: 2%;
   padding-bottom: 4%;
@@ -40,7 +41,23 @@ body {
   left: 1vw;
   top: 10vh;
   border-radius: 25px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.chartName {
+  top: 85vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding: 3% 2%;
+}
+.chartName h3 {
+  position: relative;
+  width: 100%;
+}
+.chartName .btn {
+  margin: 0 10px;
 }
 .fundDashboard {
   position: fixed;
@@ -54,7 +71,9 @@ body {
   padding: 1%;
   overflow-y: scroll;
   overflow-x: hidden;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 .fundDashboardSubSections {
   border-top-left-radius: 15px;
@@ -71,7 +90,7 @@ body {
 .fundDashboardSubSections .row:nth-child(even) {
   background-color: white;
 }
-.graphSpace{
+.graphSpace {
   position: absolute;
   width: 60vw;
   height: 85vh;
@@ -92,34 +111,34 @@ body {
 .graphSpace h4 {
   color: rgba(2, 0, 36, 1);
 }
-.nav-item{
-  background-color: rgba(0, 202, 249,0.3);
+.nav-item {
+  background-color: rgba(0, 202, 249, 0.3);
   margin: 10px;
   border-radius: 12px;
   width: 100px;
   text-align: center;
   transition: all 0.2s ease;
 }
-.nav-item-magnify:hover{
+.nav-item-magnify:hover {
   transform: scale(1.25);
 }
-.builder-nav-item{
+.builder-nav-item {
   border-left: 1px solid white;
   padding-left: 2%;
   margin-left: 2%;
 }
-.dropdown{
+.dropdown {
   position: absolute;
   right: 10px;
   width: 300px;
 }
-.dropdown-toggle{
+.dropdown-toggle {
   color: white;
 }
-.dropdown-toggle:hover{
+.dropdown-toggle:hover {
   color: white;
 }
-.dropdown-menu{
+.dropdown-menu {
   position: relative;
   width: 100%;
 }

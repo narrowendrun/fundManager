@@ -30,10 +30,10 @@ export default function GraphModule({ options, title, debt, equity }) {
   return (
     <>
       <div className="graphContainer container">
-        <center>
+        {/* <center>
           <h2>{title}</h2>
         </center>
-        <br />
+        <br /> */}
         <div className="container" style={graphStyle}>
           <h4> Debt Charts ({title})</h4>
           <Bar data={debt} options={options} />
