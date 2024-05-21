@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../resources/navbar";
 import { getInitialFundID } from "../resources/functions";
+import Builder from "./Builder";
 
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());
@@ -13,11 +14,7 @@ export default function App() {
       <br />
       <br />
       <br />
-      <div className="container">
-        <center>
-          <h3>BUILDER</h3>
-        </center>
-      </div>
+      <Builder />
     </>
   );
 }

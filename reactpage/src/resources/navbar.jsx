@@ -71,15 +71,15 @@ export default function Navbar({ fundID, setFundID }) {
 
               <div className="builder-nav-item">
                 <li className="nav-item nav-item-magnify ">
-                  <a className="nav-link active" href="#">
+                  <a className="nav-link active" href="/builder/">
                     Builder
                   </a>
                 </li>
               </div>
 
-              <li className="nav-item dropdown">
+              <li className="nav-item dropdown nav-dropdown">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle nav-dropdown-toggle"
                   href="#"
                   id="navbarDropdown"
                   role="button"
@@ -89,7 +89,10 @@ export default function Navbar({ fundID, setFundID }) {
                 >
                   {fundName}
                 </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <ul
+                  className="dropdown-menu nav-dropdown-menu"
+                  aria-labelledby="navbarDropdown"
+                >
                   {fundList.length &&
                     fundList.map((item) => {
                       return (

@@ -127,18 +127,56 @@ body {
   padding-left: 2%;
   margin-left: 2%;
 }
-.dropdown {
+.nav-dropdown {
   position: absolute;
   right: 10px;
   width: 300px;
 }
-.dropdown-toggle {
+.nav-dropdown-toggle {
   color: white;
 }
-.dropdown-toggle:hover {
+.nav-dropdown-toggle:hover {
   color: white;
 }
-.dropdown-menu {
+.nav-dropdown-menu {
   position: relative;
   width: 100%;
+}
+.inflow_line_item_container {
+  border: 1px solid white;
+  border-radius: 15px;
+  padding: 1%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.inflow_line_item_addbuttons {
+  background-color: white;
+  padding: 0.5%;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.inflow_line_item_selector {
+  background: white;
+  width: 100%;
+  padding: 1%;
+  border-radius: 10px;
+  margin: 0 10px 0 40px;
+  opacity: 1;
+  transition: all 0.2s ease-in;
+}
+.inflow_dropdown_buttons {
+  margin-left: 10%;
+  width: 80%;
+}
+.inflow_dropdown_buttons:hover,
+.inflow_dropdown_buttons:focus,
+.inflow_dropdown_buttons:active {
+  background-color: white;
+  color: blue;
+}
+.inflow-dropdown-menu {
+  position: absolute;
+  left: 15%;
+  width: 70%;
 }
