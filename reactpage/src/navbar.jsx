@@ -16,11 +16,13 @@ export default function Navbar({ fundID, setFundID }) {
   }, []);
   useEffect(() => {
     if (fundList.length) {
-      setFundName(fundList[0].name);
-      setFundID(fundList[0].fund_id);
+      setFundName(fundList[fundID - 1].name);
+      setFundID(fundList[fundID - 1].fund_id);
     }
   }, [fundList]);
-
+  useEffect(() => {
+    localStorage.setItem("fundID", fundID);
+  }, [fundID]);
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

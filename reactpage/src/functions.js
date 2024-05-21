@@ -57,3 +57,7 @@ export function updateRawData(table, newRawData, setData) {
     return updatedData;
   });
 }
+export const getInitialFundID = () => {
+  const savedFundID = localStorage.getItem("fundID");
+  return savedFundID ? parseInt(savedFundID, 10) : 1;
+};
