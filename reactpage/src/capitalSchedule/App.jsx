@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Navbar from "../navbar";
+import Navbar from "../resources/navbar";
 import CapitalSchedule from "./capitalSchedule";
-import { getInitialFundID } from "../functions";
+import { getInitialFundID } from "../resources/functions";
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());
   return (

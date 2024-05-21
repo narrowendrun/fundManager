@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FileDropzone from "./dropzone";
-import Navbar from "./navbar";
-import { getInitialFundID } from "./functions";
+import FileDropzone from "./resources/dropzone";
+import Navbar from "./resources/navbar";
+import { getInitialFundID } from "./resources/functions";
 
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());

@@ -1,6 +1,6 @@
 import DebtDataHeadings from "./headings/debtDataHeadings";
 import EquityDataHeadings from "./headings/equityDataHeadings";
-import { numberFormat } from "../functions";
+import { numberFormat } from "../resources/functions";
 export default function FundDashboard({
   fundData,
   debtData,

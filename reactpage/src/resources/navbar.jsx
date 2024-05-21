@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logo from "./images/logo.png";
+import logo from "../images/logo.png";
 import { postQuery } from "./functions";
 export default function Navbar({ fundID, setFundID }) {
   const [fundList, setFundList] = useState([]);

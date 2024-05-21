@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import GraphOutput from "./graphs";
 import FundDashboard from "./fundDashboard";
-import { postQuery, querier, updateRawData } from "../functions";
+import { postQuery, querier, updateRawData } from "../resources/functions";
 export default function CapitalSchedule({ fundID }) {
   const [fundData, setFundData] = useState([]);
   const [debtData, setDebtData] = useState([]);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "../navbar";
+import Navbar from "../resources/navbar";
 import CashFlowGraphs from "./cashFlowSchedule";
-import { getInitialFundID } from "../functions";
+import { getInitialFundID } from "../resources/functions";
 
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());

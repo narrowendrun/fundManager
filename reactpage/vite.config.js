@@ -22,6 +22,7 @@ export default defineConfig({
         capitalschedule: resolve(root, "capitalschedule/index.html"),
         cashflowschedule: resolve(root, "cashflowschedule/index.html"),
         feeschedule: resolve(root, "feeschedule/index.html"),
+        builder: resolve(root, "builder/index.html"),
       },
       output: {
         // Ensure the correct path structure is maintained

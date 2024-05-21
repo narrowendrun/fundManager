@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import GraphOutput from "./GraphOutput";
-import { postQuery, querier, updateRawData } from "../functions";
+import { postQuery, querier, updateRawData } from "../resources/functions";
 export default function FeeScheduleGraphs({ fundID }) {
   const [allData, setData] = useState({
     fee_schedule: {
