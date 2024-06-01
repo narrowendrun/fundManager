@@ -180,3 +180,35 @@ body {
   left: 15%;
   width: 70%;
 }
+th,
+td {
+  border: 1px solid white;
+  width: 80px;
+  font-size: 5px;
+  color: white;
+  text-align: center;
+}
+.outflowItemContainer {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 1%;
+  padding-left: 5%;
+  border-radius: 12.5px;
+  margin-bottom: 1.5%;
+}
+.outflowItemDropdown,
+.outflowInput {
+  width: 200px;
+  margin: 0 20px 0 10px;
+  height: 40px;
+}
+.outflowItemDropdown button {
+  width: 100%;
+}
+.outflowInput {
+  border: 1px solid blue;
+  margin-left: 30px;
+  padding-left: 20px;
+  border-radius: 8.5px;
+}

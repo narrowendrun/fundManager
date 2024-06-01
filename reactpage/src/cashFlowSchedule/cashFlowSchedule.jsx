@@ -17,8 +17,11 @@ export default function CashFlowGraphs({ fundID }) {
   });
   useEffect(() => {
     Object.keys(allData).forEach((table) => {
-      postQuery(querier(table, fundID), (data) =>
-        updateRawData(table, data, setData)
+      postQuery(
+        {
+          query: `SELECT * FROM cashflow_schedule WHERE (liquidation_proceeds >0 OR total_p_i_income>0) AND fund_id=${fundID} ORDER BY date`,
+        },
+        (data) => updateRawData(table, data, setData)
       );
     });
   }, [fundID]);
