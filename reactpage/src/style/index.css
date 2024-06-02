@@ -180,14 +180,7 @@ body {
   left: 15%;
   width: 70%;
 }
-th,
-td {
-  border: 1px solid white;
-  width: 80px;
-  font-size: 5px;
-  color: white;
-  text-align: center;
-}
+
 .outflowItemContainer {
   background-color: white;
   display: flex;
@@ -195,7 +188,6 @@ td {
   padding: 1%;
   padding-left: 5%;
   border-radius: 12.5px;
-  margin-bottom: 1.5%;
 }
 .outflowItemDropdown,
 .outflowInput {
@@ -208,7 +200,30 @@ td {
 }
 .outflowInput {
   border: 1px solid blue;
-  margin-left: 30px;
   padding-left: 20px;
   border-radius: 8.5px;
+}
+.dataTable {
+  display: flex;
+  color: white;
+  text-align: center;
+}
+.tableContainer {
+  width: 100%;
+  overflow: scroll;
+  scrollbar-color: black;
+  margin-left: 30px;
+}
+.tableContainer table {
+  width: 100%;
+  table-layout: fixed;
+}
+.dataTable tr {
+  border: 1px solid white;
+  height: 30px;
+}
+.dataTable td,
+th {
+  border: 1px solid white;
+  width: 150px;
 }

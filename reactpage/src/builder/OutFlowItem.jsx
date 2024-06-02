@@ -1,22 +1,35 @@
 import { useEffect, useState } from "react";
 import { postQuery } from "../resources/functions";
-export default function OutFlowItem({ fundID, list }) {
-  const [selection, setSelection] = useState("outflow type");
+import { VscArrowSwap, VscError } from "react-icons/vsc";
+export default function OutFlowItem({
+  fundID,
+  list,
+  index,
+  item,
+  setOutflowLineItems,
+  onDelete,
+  allData,
+}) {
+  const [selection, setSelection] = useState(item.outflowType);
   const [outflowType, setOutflowType] = useState("");
-  const [subtype, setSubtype] = useState("sub-type");
+  const [subtype, setSubtype] = useState(item.subType);
   const [frequency, setFrequency] = useState({
-    payment_frequency: "frequency",
+    payment_frequency: item.frequency,
   });
   const [paidFrom, setPaidFrom] = useState("net proceeds");
-  const [allocation, setAllocation] = useState("");
-  function handleSelection(item, type) {
+  const [allocation, setAllocation] = useState(item.allocation);
+  function handleSelection(tranche, type) {
     if (type == "subtype") {
-      setSubtype(item);
+      setSubtype(tranche);
     } else {
-      setSelection(list[item].title);
-      setOutflowType(list[item]);
+      setSelection(list[tranche].title);
+      setOutflowType(list[tranche]);
     }
   }
+  function deleteLineItem() {
+    onDelete(index);
+  }
+
   useEffect(() => {
     if (subtype == "senior" || subtype == "mezz" || subtype == "junior") {
       postQuery(
@@ -34,96 +47,139 @@ export default function OutFlowItem({ fundID, list }) {
       );
     }
   }, [fundID, subtype]);
+  useEffect(() => {
+    setOutflowLineItems((prev) => {
+      const newArray = [...prev];
+      newArray[index] = {
+        outflowType: selection,
+        subType: subtype,
+        frequency: frequency.payment_frequency,
+        allocation: allocation,
+      };
+      return newArray;
+    });
+  }, [
+    fundID,
+    selection,
+    subtype,
+    frequency.payment_frequency,
+    allocation,
+    index,
+  ]);
+  useEffect(() => {
+    setSelection(allData[index].outflowType);
+    setSubtype(allData[index].subType);
+    setAllocation(allData[index].allocation);
+  }, [allData]);
   return (
     <>
-      <div className="container outflowItemContainer">
-        <div className="dropdown outflowItemDropdown">
-          <button
-            className="btn btn-outline-primary dropdown-toggle "
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {selection}
-          </button>
-          <ul className="dropdown-menu ">
-            {Object.keys(list).map((item) => {
-              let title = list[item].title;
-              return (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="dropdown-item"
-                    onClick={() => handleSelection(item)}
-                  >
-                    {title}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div className="dropdown outflowItemDropdown">
-          <button
-            className="btn btn-outline-primary dropdown-toggle "
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {subtype}
-          </button>
-          <ul className="dropdown-menu">
-            {outflowType.values &&
-              outflowType.values.map((item) => {
+      {/* <p>{index}</p> */}
+      <div style={{ marginBottom: "1%" }}>
+        <div className="container outflowItemContainer">
+          <div className="dropdown outflowItemDropdown">
+            <button
+              className="btn btn-outline-primary dropdown-toggle "
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {selection}
+            </button>
+            <ul className="dropdown-menu">
+              {Object.keys(list).map((item) => {
+                let title = list[item].title;
                 return (
                   <li key={item}>
                     <a
                       href="#"
                       className="dropdown-item"
-                      onClick={() => handleSelection(item, "subtype")}
+                      onClick={() => handleSelection(item)}
                     >
-                      {item}
+                      {title}
                     </a>
                   </li>
                 );
               })}
-          </ul>
-        </div>
-        <div className="dropdown outflowItemDropdown">
-          <button
-            className="btn btn-outline-primary dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            disabled={true}
-            style={{ opacity: "1" }}
-          >
-            {frequency && frequency.payment_frequency}
-          </button>
-        </div>
-        <div className="dropdown outflowItemDropdown">
-          <button
-            className="btn btn-outline-primary dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {paidFrom}
-          </button>
-          <ul className="dropdown-menu ">
-            <li>net_proceeds</li>
-            <li>working capital</li>
-          </ul>
-        </div>
+            </ul>
+          </div>
+          <div className="dropdown outflowItemDropdown">
+            <button
+              className="btn btn-outline-primary dropdown-toggle "
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {subtype}
+            </button>
+            <ul className="dropdown-menu">
+              {outflowType.values &&
+                outflowType.values.map((item) => {
+                  return (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        className="dropdown-item"
+                        onClick={() => handleSelection(item, "subtype")}
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+          <div className="dropdown outflowItemDropdown">
+            <button
+              className="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              disabled={true}
+              style={{ opacity: "1" }}
+            >
+              {frequency && frequency.payment_frequency}
+            </button>
+          </div>
+          <div className="dropdown outflowItemDropdown">
+            <button
+              className="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {paidFrom}
+            </button>
+            <ul className="dropdown-menu ">
+              <li>net_proceeds</li>
+              <li>working capital</li>
+            </ul>
+          </div>
 
-        <input
-          type="text"
-          className=" outflowInput"
-          id="allocation"
-          value={allocation}
-          onChange={(e) => setAllocation(e.target.value)}
-        />
-        {/* <label for="allocation">Allocation%</label> */}
+          <input
+            type="text"
+            className=" outflowInput"
+            id={`allocation${index}`}
+            value={allocation}
+            onChange={(e) => setAllocation(e.target.value)}
+          />
+          {/* <label for="allocation">Allocation%</label> */}
+          <VscError
+            style={{ fontSize: "2em", marginLeft: "0.2em", cursor: "pointer" }}
+            onClick={() => deleteLineItem()}
+          />
+        </div>
+        <div style={{ transform: "translateY(-1em)" }}>
+          <VscArrowSwap
+            style={{
+              rotate: "90deg",
+              fontSize: "2em",
+              background: "white",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginLeft: "0.5em",
+            }}
+          />
+        </div>
       </div>
     </>
   );

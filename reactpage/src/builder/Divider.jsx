@@ -1,12 +1,67 @@
-export default function Divider({ title, button }) {
+import { VscDiffAdded, VscDebugRestart } from "react-icons/vsc";
+export default function Divider({
+  title,
+  button,
+  numberOfOutflows,
+  setOutflowLineItems,
+}) {
+  const style = {
+    marginBottom: "20px",
+    padding: "0",
+    display: "flex",
+    alignItems: "center",
+    transform: "scale(2.5)",
+  };
+  function addLineItem() {
+    setOutflowLineItems((prev) => {
+      const newArray = [...prev];
+      newArray.push({
+        outflowType: "outflow",
+        subType: "subtype",
+        frequency: "frequency",
+        allocation: "100",
+      });
+      return newArray;
+    });
+  }
+  function clearLineItems() {
+    console.log("reset line item");
+    setOutflowLineItems([
+      {
+        outflowType: "outflow",
+        subType: "subtype",
+        frequency: "frequency",
+        allocation: "100",
+      },
+    ]);
+  }
   return (
     <>
       <div
         className="container"
         style={{ marginTop: "2%", display: "flex", alignItems: "center" }}
       >
-        <h2 style={{ width: "30%" }}>{title}</h2>
-        {button ? <div className="btn btn-primary">+</div> : ""}
+        <h2 style={{ width: "92%" }}>
+          {title} {numberOfOutflows > 0 ? `(${numberOfOutflows})` : ""}
+        </h2>
+        {button ? (
+          <div style={style}>
+            <div
+              style={{ margin: "0 5px 0 0", cursor: "pointer" }}
+              onClick={() => addLineItem()}
+            >
+              <VscDiffAdded />
+            </div>
+            <div
+              style={{ margin: "0 0 0 5px", cursor: "pointer" }}
+              onClick={() => clearLineItems()}
+            >
+              <VscDebugRestart />
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="container" style={{ borderTop: "1px solid white" }}></div>
     </>
