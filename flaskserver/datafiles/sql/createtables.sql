@@ -85,6 +85,21 @@ VALUES
 (4, 'classa', 0, 11, 8, 46.52, 'annually'),
 (4, 'classb', 0, 17, 10, 22.97, 'annually');
 
+CREATE TABLE fees_information (
+  id BIGSERIAL PRIMARY KEY NOT NULL ,
+  fund_id INTEGER ,
+  acquisition DOUBLE PRECISION,
+  asset_management DOUBLE PRECISION,
+  debt_origination DOUBLE PRECISION,
+  FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
+);
+INSERT INTO fees_information (fund_id, acquisition, asset_management, debt_origination)
+VALUES (1, 1, 3, 2),
+       (2, 1, 1.5, 0),
+       (3, 0, 3, 0),
+       (4, 1, 1.5, 0);
+
+
 CREATE TABLE loan_details (
     loan_id VARCHAR(100) PRIMARY KEY NOT NULL,
     svc_loan_id VARCHAR(100),
