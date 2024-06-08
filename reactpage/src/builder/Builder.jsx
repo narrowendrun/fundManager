@@ -1,10 +1,63 @@
 import Divider from "./Divider";
 import InFlowLineItem from "./InFlowItem";
-import { postQuery, querier } from "../resources/functions";
+import { postQuery } from "../resources/functions";
 import { useEffect, useState } from "react";
 import OutFlowItem from "./OutFlowItem";
+import DataTable from "./DataTable";
+import React from "react";
+import InitDataTable from "./initDataTable";
 
 export default function Builder({ fundID, setFundID }) {
+  const periods = {
+    quarterly: {
+      net_proceeds: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date`,
+      },
+      senior: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+      },
+      mezz: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+      },
+      junior: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+      },
+      classa: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classa) AS classa FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+      },
+      classb: {
+        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classb) AS classb FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+      },
+    },
+    biannual: {
+      net_proceeds: {
+        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date`,
+      },
+      senior: {
+        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+      },
+      mezz: {
+        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+      },
+      junior: {
+        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+      },
+    },
+    annually: {
+      net_proceeds: {
+        query: `SELECT date_trunc('year', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+      },
+      senior: {
+        query: `SELECT date_trunc('year', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+      },
+      mezz: {
+        query: `SELECT date_trunc('year', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+      },
+      junior: {
+        query: `SELECT date_trunc('year', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+      },
+    },
+  };
   const [list, setList] = useState({
     costofequity: {
       title: "cost of debt",
@@ -24,6 +77,33 @@ export default function Builder({ fundID, setFundID }) {
     },
   ]);
   const [netProceeds, setNetProceeds] = useState([]);
+  const netProceedsStatic = [
+    {
+      date: "2022-10-01",
+      net_proceeds: "4075.35",
+    },
+    {
+      date: "2023-01-01",
+      net_proceeds: "96041.65629",
+    },
+  ];
+  const [lineData, setLineData] = useState({});
+  const [frequency, setFrequency] = useState("");
+  const [CAFD, setCAFD] = useState({
+    1: netProceedsStatic.map(({ date, net_proceeds }) => ({
+      date,
+      CAFD: net_proceeds,
+    })),
+  });
+  const [WCR, setWCR] = useState({
+    1: netProceedsStatic.map(({ date, net_proceeds }) => ({
+      date,
+      WCR: net_proceeds,
+    })),
+  });
+  const [due, setDue] = useState({});
+  const [paid, setPaid] = useState({});
+  const [accrued, setAccrued] = useState({});
   const handleDeleteLineItem = (index) => {
     setOutflowLineItems((prevItems) =>
       prevItems.filter((_, itemIndex) => itemIndex !== index)
@@ -31,10 +111,24 @@ export default function Builder({ fundID, setFundID }) {
   };
   useEffect(() => {
     postQuery(
-      querier("cashflow_schedule", fundID, "date, net_proceeds"),
-      setNetProceeds
+      {
+        query: `SELECT debt_type, payment_frequency FROM debt_structure WHERE (fund_id = ${fundID} AND debt_type='senior')`,
+      },
+      (data) => setFrequency(data[0])
     );
   }, [fundID]);
+  useEffect(() => {
+    if (frequency.payment_frequency) {
+      postQuery(
+        periods[frequency.payment_frequency].net_proceeds,
+        setNetProceeds
+      );
+    }
+  }, [frequency]);
+
+  useEffect(() => {
+    console.log("lineData :", lineData);
+  }, [lineData]);
 
   return (
     <>
@@ -55,55 +149,62 @@ export default function Builder({ fundID, setFundID }) {
         button={true}
         numberOfOutflows={outflowLineItems.length}
         setOutflowLineItems={setOutflowLineItems}
+        setLineData={setLineData}
+        setDue={setDue}
+        setPaid={setPaid}
+        setAccrued={setAccrued}
+        setCAFD={setCAFD}
+        setWCR={setWCR}
       />
       <br />
       <div className="container">
         {outflowLineItems.map((item, index) => (
           <OutFlowItem
             key={index}
-            list={list}
             fundID={fundID}
+            list={list}
             index={index}
             item={item}
             setOutflowLineItems={setOutflowLineItems}
             onDelete={handleDeleteLineItem}
             allData={outflowLineItems}
+            setLineData={setLineData}
+            periods={periods}
+            setPaid={setPaid}
+            setDue={setDue}
+            CAFD={CAFD}
+            setCAFD={setCAFD}
+            WCR={WCR}
+            setWCR={setWCR}
+            setAccrued={setAccrued}
           />
         ))}
       </div>
       <br />
-      <div className="container dataTable">
-        <div className="tableContainerHeadings">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-              </tr>
-              <tr>
-                <th>Net Proceeds</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div className="tableContainer">
-          <table className="netProceedsTable">
-            <thead>
-              <tr>
-                {netProceeds.map((item) => {
-                  return <th key={item.date}>{item.date}</th>;
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {netProceeds.map((item) => {
-                  return <td key={item.date}>{item.net_proceeds}</td>;
-                })}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <InitDataTable
+        title={"net Proceeds"}
+        data={netProceedsStatic}
+        CAFD={CAFD[1]}
+        WCR={WCR[1]}
+        column="net_proceeds"
+      />
+      <br />
+      {Object.keys(lineData).map((tranche) => {
+        return (
+          <React.Fragment key={`table-${tranche}`}>
+            <DataTable
+              title={tranche}
+              data={lineData[tranche]}
+              due={due[tranche]}
+              paid={paid[tranche]}
+              accrued={accrued[tranche]}
+              CAFD={CAFD[tranche]}
+              WCR={WCR[tranche]}
+            />
+            <br />
+          </React.Fragment>
+        );
+      })}
     </>
   );
 }
