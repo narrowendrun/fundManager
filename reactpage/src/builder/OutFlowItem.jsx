@@ -154,8 +154,8 @@ export default function OutFlowItem({
     });
     if (subtype !== "subtype" && frequency.payment_frequency !== "frequency") {
       postQuery(periods[frequency.payment_frequency][subtype], (data) => {
-        const newLocalDue = data.map((item) => item[subtype]);
-        setLocalDue(newLocalDue);
+        const newLocalDue = data.map((item) => parseFloat(item[subtype]));
+
         setLineData((prev) => ({
           ...prev,
           [subtype]: data,
@@ -168,71 +168,74 @@ export default function OutFlowItem({
           const localAccrued = [];
           const __localDue = [];
           CAFD[Object.keys(CAFD)[index]].map((item) =>
-            upperCAFD.push(item.CAFD)
+            upperCAFD.push(parseFloat(item.CAFD))
           );
-          WCR[Object.keys(WCR)[index]].map((item) => upperWCR.push(item.WCR));
+          WCR[Object.keys(WCR)[index]].map((item) =>
+            upperWCR.push(parseFloat(item.WCR))
+          );
+
           const paidArray = [];
-          let __paidAmount = 0;
-          for (let i = 0; i < upperCAFD.length; i++) {
-            //finding if we have to pay from CAFD or WCR
-            //initialise each variable
-            let payFromCAFD = upperCAFD[i] * (allocation / 100);
-            let payFromWCR = upperWCR[i];
-            let __paidfromwhich = 0;
-            //find the minimum of the two, if either of them are 0 then we use the other
-            if (payFromCAFD !== 0 && payFromWCR !== 0) {
-              __paidfromwhich = Math.min(payFromCAFD, payFromWCR);
-            } else if (payFromCAFD == 0) {
-              __paidfromwhich = payFromWCR;
-            } else if (payFromWCR == 0) {
-              __paidfromwhich = payFromCAFD;
-            }
-            //calculating paid amount
-            __paidAmount = Math.min(newLocalDue[i], __paidfromwhich);
-            //calculating currCAFD and currWCR
-            if (__paidfromwhich == payFromCAFD) {
-              currCAFD.push({ index: i, CAFD: upperCAFD[i] - __paidAmount });
-              currWCR.push({ index: i, WCR: upperWCR[i] });
-            } else if (__paidfromwhich == payFromWCR) {
-              currCAFD.push({ index: i, CAFD: upperCAFD[i] });
-              currWCR.push({ index: i, WCR: upperWCR[i] - __paidAmount });
-            }
-            // if (newLocalDue[i] != 0) {
-            //   __paid = Math.min(upperCAFD[i] * (allocation / 100), upperWCR[i]);
-            // }
 
-            // if (upperCAFD[i] * (allocation / 100) == __paid) {
-            //   __paidfromwhich = "CAFD";
-            //   currWCR.push({ index: i, WCR: upperWCR[i] });
-            //   currCAFD.push({ index: i, CAFD: upperCAFD[i] - __paid });
-            // } else if (upperWCR[i] * (allocation / 100) == __paid) {
-            //   __paidfromwhich == "WCR";
-            //   currCAFD.push({ index: i, CAFD: upperCAFD[i] });
-            //   currWCR.push({ index: i, WCR: upperWCR[i] - __paid });
-            // } else if (__paid == 0) {
-            //   currCAFD.push({ index: i, CAFD: upperCAFD[i] });
-            //   currWCR.push({ index: i, WCR: upperWCR[i] });
-            // }
-            paidArray.push({ index: i, paid: __paidAmount });
-          }
-
+          __localDue[0] = { index: 0, due: newLocalDue[0] };
+          paidArray.push({
+            index: 0,
+            paid: Math.min(__localDue[0].due, upperCAFD[0]),
+          });
           localAccrued[0] = {
             index: 0,
-            accrued: parseFloat(newLocalDue[0]) - parseFloat(paidArray[0].paid),
+            accrued: newLocalDue[0] - paidArray[0].paid,
           };
-          __localDue[0] = { index: 0, due: parseFloat(newLocalDue[0]) };
+
+          let payFromCAFD = upperCAFD[0] * (allocation / 100);
+          let payFromWCR = upperWCR[0];
+          let __paidfromwhich = payFromCAFD;
+          if (__paidfromwhich == payFromCAFD) {
+            currCAFD.push({ index: 0, CAFD: upperCAFD[0] - paidArray[0].paid });
+            currWCR.push({ index: 0, WCR: upperWCR[0] });
+          } else if (__paidfromwhich == payFromWCR) {
+            currCAFD.push({ index: 0, CAFD: upperCAFD[0] });
+            currWCR.push({ index: 0, WCR: upperWCR[0] - paidArray[0].paid });
+          }
+
           for (let i = 1; i < newLocalDue.length; i++) {
+            let __paidAmount = 0;
+            payFromCAFD = upperCAFD[i] * (allocation / 100);
+            payFromWCR = upperWCR[i];
+            __paidfromwhich = payFromCAFD;
+            //find the minimum of the two, if either of them are 0 then we use the other
+            // if (payFromCAFD !== 0 && payFromWCR !== 0) {
+            //   __paidfromwhich = Math.min(payFromCAFD, payFromWCR);
+            // } else if (payFromCAFD == 0) {
+            //   __paidfromwhich = payFromWCR;
+            // } else if (payFromWCR == 0) {
+            //   __paidfromwhich = payFromCAFD;
+            // }
+
+            //calculating paid amount
+            let thisDue = newLocalDue[i] + localAccrued[i - 1].accrued;
+            __paidAmount = Math.min(thisDue, __paidfromwhich);
             __localDue.push({
               index: i,
-              due:
-                parseFloat(newLocalDue[i]) +
-                parseFloat(localAccrued[i - 1].accrued),
+              due: thisDue,
+            });
+            paidArray.push({
+              index: i,
+              paid: __paidAmount,
             });
             localAccrued.push({
               index: i,
-              accrued:
-                parseFloat(__localDue[i].due) - parseFloat(paidArray[i].paid),
+              accrued: __localDue[i].due - paidArray[i].paid,
             });
+            if (__paidfromwhich == payFromCAFD) {
+              currCAFD.push({
+                index: i,
+                CAFD: upperCAFD[i] - paidArray[i].paid,
+              });
+              currWCR.push({ index: i, WCR: upperWCR[i] });
+            } else if (__paidfromwhich == payFromWCR) {
+              currCAFD.push({ index: i, CAFD: upperCAFD[i] });
+              currWCR.push({ index: i, WCR: upperWCR[i] - paidArray[i].paid });
+            }
           }
           setDue((prevDue) => {
             const newDue = { ...prevDue, [subtype]: __localDue };
@@ -381,3 +384,94 @@ export default function OutFlowItem({
     </>
   );
 }
+
+// {
+//   "fund_id": 1,
+//   "date": "2024-01-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2024-04-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2024-07-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2024-10-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2025-01-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2025-04-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2025-07-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2026-01-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2026-04-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// },
+// {
+//   "fund_id": 1,
+//   "date": "2026-10-01",
+//   "senior": 0,
+//   "mezz": 0,
+//   "junior": 0,
+//   "classa": 0,
+//   "classb": 0
+// }

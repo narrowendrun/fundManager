@@ -10,7 +10,7 @@ export default function Navbar({ fundID, setFundID }) {
   };
   useEffect(() => {
     postQuery(
-      { query: `SELECT fund_id, name FROM fund_information` },
+      { query: `SELECT fund_id, name FROM fund_information ORDER BY fund_id` },
       setFundList
     );
   }, []);

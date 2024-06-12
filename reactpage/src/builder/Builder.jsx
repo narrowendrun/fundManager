@@ -8,56 +8,201 @@ import React from "react";
 import InitDataTable from "./initDataTable";
 
 export default function Builder({ fundID, setFundID }) {
+  // const periods = {
+  //   quarterly: {
+  //     net_proceeds: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date`,
+  //     },
+  //     senior: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     mezz: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     junior: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     classa: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classa) AS classa FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     classb: {
+  //       query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classb) AS classb FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //   },
+  //   biannual: {
+  //     net_proceeds: {
+  //       query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date`,
+  //     },
+  //     senior: {
+  //       query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+  //     },
+  //     mezz: {
+  //       query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+  //     },
+  //     junior: {
+  //       query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+  //     },
+  //   },
+  //   annually: {
+  //     net_proceeds: {
+  //       query: `SELECT date_trunc('year', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     senior: {
+  //       query: `SELECT date_trunc('year', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     mezz: {
+  //       query: `SELECT date_trunc('year', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //     junior: {
+  //       query: `SELECT date_trunc('year', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+  //     },
+  //   },
+  // };
   const periods = {
     quarterly: {
       net_proceeds: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(net_proceeds) AS net_proceeds 
+                FROM cashflow_schedule 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       senior: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(senior) AS senior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       mezz: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(mezz) AS mezz 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       junior: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(junior) AS junior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       classa: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classa) AS classa FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(classa) AS classa 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       classb: {
-        query: `SELECT date_trunc('quarter', date)::date AS date, SUM(classb) AS classb FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('quarter', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(classb) AS classb 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
     },
     biannual: {
       net_proceeds: {
-        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date`,
+        query: `SELECT 
+                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(net_proceeds) AS net_proceeds 
+                FROM cashflow_schedule 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       senior: {
-        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(senior) AS senior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       mezz: {
-        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(mezz) AS mezz 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
       junior: {
-        query: `SELECT (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, (CASE WHEN EXTRACT(MONTH FROM date) IN (1, 2, 3, 4, 5, 6) THEN date_trunc('year', date) + interval '0 month' ELSE date_trunc('year', date) + interval '6 month' END)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(junior) AS junior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
       },
     },
     annually: {
       net_proceeds: {
-        query: `SELECT date_trunc('year', date)::date AS date, SUM(net_proceeds) AS net_proceeds FROM cashflow_schedule WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(net_proceeds) AS net_proceeds 
+                FROM cashflow_schedule 
+                WHERE fund_id=${fundID} 
+                GROUP BY fiscal_year 
+                ORDER BY fiscal_year`,
       },
       senior: {
-        query: `SELECT date_trunc('year', date)::date AS date, SUM(senior) AS senior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(senior) AS senior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY fiscal_year 
+                ORDER BY fiscal_year`,
       },
       mezz: {
-        query: `SELECT date_trunc('year', date)::date AS date, SUM(mezz) AS mezz FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(mezz) AS mezz 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY fiscal_year 
+                ORDER BY fiscal_year`,
       },
       junior: {
-        query: `SELECT date_trunc('year', date)::date AS date, SUM(junior) AS junior FROM costofcapital WHERE fund_id=${fundID} GROUP BY fund_id, date_trunc('year', date)::date ORDER BY fund_id, date;`,
+        query: `SELECT 
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(junior) AS junior 
+                FROM costofcapital 
+                WHERE fund_id=${fundID} 
+                GROUP BY fiscal_year 
+                ORDER BY fiscal_year`,
       },
     },
   };
+
   const [list, setList] = useState({
     costofequity: {
       title: "cost of debt",
@@ -68,14 +213,7 @@ export default function Builder({ fundID, setFundID }) {
       values: ["classa", "classb"],
     },
   });
-  const [outflowLineItems, setOutflowLineItems] = useState([
-    {
-      outflowType: "outflow",
-      subType: "subtype",
-      frequency: "frequency",
-      allocation: "100",
-    },
-  ]);
+  const [outflowLineItems, setOutflowLineItems] = useState([]);
   const [netProceeds, setNetProceeds] = useState([]);
   const netProceedsStatic = [
     {
@@ -90,13 +228,13 @@ export default function Builder({ fundID, setFundID }) {
   const [lineData, setLineData] = useState({});
   const [frequency, setFrequency] = useState("");
   const [CAFD, setCAFD] = useState({
-    1: netProceedsStatic.map(({ date, net_proceeds }) => ({
+    1: netProceeds.map(({ date, net_proceeds }) => ({
       date,
       CAFD: net_proceeds,
     })),
   });
   const [WCR, setWCR] = useState({
-    1: netProceedsStatic.map(({ date, net_proceeds }) => ({
+    1: netProceeds.map(({ date, net_proceeds }) => ({
       date,
       WCR: net_proceeds,
     })),
@@ -125,10 +263,22 @@ export default function Builder({ fundID, setFundID }) {
       );
     }
   }, [frequency]);
-
   useEffect(() => {
-    console.log("lineData :", lineData);
-  }, [lineData]);
+    setCAFD({
+      1: netProceeds.map(({ duration, fiscal_year, net_proceeds }) => ({
+        duration,
+        fiscal_year,
+        CAFD: net_proceeds,
+      })),
+    });
+    setWCR({
+      1: netProceeds.map(({ duration, fiscal_year, net_proceeds }) => ({
+        duration,
+        fiscal_year,
+        WCR: net_proceeds,
+      })),
+    });
+  }, [netProceeds]);
 
   return (
     <>
@@ -183,7 +333,7 @@ export default function Builder({ fundID, setFundID }) {
       <br />
       <InitDataTable
         title={"net Proceeds"}
-        data={netProceedsStatic}
+        data={netProceeds}
         CAFD={CAFD[1]}
         WCR={WCR[1]}
         column="net_proceeds"

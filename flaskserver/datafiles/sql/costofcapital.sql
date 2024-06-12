@@ -1,29 +1,25 @@
+-- Step 1: Create the new table 'costofcapital'
 CREATE TABLE costofcapital (
     id SERIAL PRIMARY KEY,
     fund_id INTEGER,
     date DATE,
-    senior FLOAT,
-    mezz FLOAT,
-    junior FLOAT,
-    classa FLOAT,
-    classb FLOAT,
-    total FLOAT,
-    CONSTRAINT fk_fund_id_cost FOREIGN KEY (fund_id) REFERENCES fund_information (fund_id)
+    senior NUMERIC,
+    mezz NUMERIC,
+    junior NUMERIC,
+    classa NUMERIC,
+    classb NUMERIC,
+    total NUMERIC GENERATED ALWAYS AS (senior + mezz + junior + classa + classb) STORED,
+    FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
 
-INSERT INTO costofcapital (fund_id, date, senior, mezz, junior, classa, classb, total)
-SELECT 
-    c.fund_id,
-    c.date,
-    c.senior * d.interest_rate AS senior,
-    c.mezz * d.interest_rate AS mezz,
-    c.junior * d.interest_rate AS junior,
-    c.classa * e.preferred_percent AS classa,
-    c.classb * e.preferred_percent AS classb,
-    (c.senior * d.interest_rate + c.mezz * d.interest_rate + c.junior * d.interest_rate + c.classa * e.preferred_percent + c.classb * e.preferred_percent) AS total
-FROM 
-    capitaloutstandingbalance c
-JOIN 
-    debt_structure d ON c.fund_id = d.fund_id
-JOIN 
-    equity_structure e ON c.fund_id = e.fund_id;
+-- Step 2: Populate the 'costofcapital' table
+INSERT INTO costofcapital (fund_id, date, senior, mezz, junior, classa, classb)
+SELECT
+    cob.fund_id,
+    cob.date,
+    cob.senior * (SELECT interest_rate FROM debt_structure WHERE debt_type='senior' AND fund_id=cob.fund_id) / 36500,
+    cob.mezz * (SELECT interest_rate FROM debt_structure WHERE debt_type='mezz' AND fund_id=cob.fund_id) / 36500,
+    cob.junior * (SELECT interest_rate FROM debt_structure WHERE debt_type='junior' AND fund_id=cob.fund_id) / 36500,
+    cob.classa * (SELECT preferred_percent FROM equity_structure WHERE equity_type='classa' AND fund_id=cob.fund_id) / 36500,
+    cob.classb * (SELECT preferred_percent FROM equity_structure WHERE equity_type='classb' AND fund_id=cob.fund_id) / 36500
+FROM capitaloutstandingbalance cob;

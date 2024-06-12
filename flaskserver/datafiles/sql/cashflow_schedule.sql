@@ -139,6 +139,7 @@ SELECT
     SUM(liq_price) AS liquidation_proceeds,
     SUM(total_investment) AS total_investment
 FROM loan_details
+WHERE status = 'SOLD'
 GROUP BY fund_id, DATE_TRUNC('month', updated_liq_date)::DATE
 ORDER BY fund_id, month;
 

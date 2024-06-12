@@ -226,4 +226,5 @@ body {
 th {
   border: 1px solid white;
   width: 150px;
+  overflow: auto;
 }

@@ -1,3 +1,4 @@
+import { numberFormat } from "../resources/functions";
 export default function DataTable({
   title,
   data,
@@ -57,7 +58,11 @@ export default function DataTable({
               <thead>
                 <tr>
                   {data.map((item) => {
-                    return <th key={item.date}>{item.date}</th>;
+                    return (
+                      <th
+                        key={`${item.duration} ${item.fiscal_year}`}
+                      >{`${item.duration} ${item.fiscal_year}`}</th>
+                    );
                   })}
                 </tr>
               </thead>
@@ -66,7 +71,7 @@ export default function DataTable({
                   {due.map((item) => {
                     return (
                       <td key={item.index} style={td_style(item.due)}>
-                        {item.due}
+                        {numberFormat(item.due)}
                       </td>
                     );
                   })}
@@ -75,7 +80,7 @@ export default function DataTable({
                   {paid.map((item) => {
                     return (
                       <td key={item.index} style={td_style(item.paid)}>
-                        {item.paid}
+                        {numberFormat(item.paid)}
                       </td>
                     );
                   })}
@@ -84,7 +89,7 @@ export default function DataTable({
                   {accrued.map((item) => {
                     return (
                       <td key={item.index} style={td_style(item.accrued)}>
-                        {item.accrued}
+                        {numberFormat(item.accrued)}
                       </td>
                     );
                   })}
@@ -115,7 +120,7 @@ export default function DataTable({
                   {CAFD.map((item) => {
                     return (
                       <td key={item.index} style={td_style(item.CAFD)}>
-                        {item.CAFD}
+                        {numberFormat(item.CAFD)}
                       </td>
                     );
                   })}
@@ -124,7 +129,7 @@ export default function DataTable({
                   {WCR.map((item) => {
                     return (
                       <td key={item.index} style={td_style(item.WCR)}>
-                        {item.WCR}
+                        {numberFormat(item.WCR)}
                       </td>
                     );
                   })}

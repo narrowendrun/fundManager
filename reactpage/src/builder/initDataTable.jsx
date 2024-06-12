@@ -1,4 +1,16 @@
+import { numberFormat } from "../resources/functions";
 export default function InitDataTable({ title, data, CAFD, WCR, column }) {
+  const td_style = (value) => {
+    if (value < 0) {
+      return { background: "red" };
+    } else if (value == 0) {
+      return {
+        background: "rgb(225,173,1)",
+        color: "black",
+        borderColor: "black",
+      };
+    }
+  };
   return (
     <>
       <div
@@ -32,14 +44,25 @@ export default function InitDataTable({ title, data, CAFD, WCR, column }) {
               <thead>
                 <tr>
                   {data.map((item) => {
-                    return <th key={item.date}>{item.date}</th>;
+                    return (
+                      <th key={`${item.duration} ${item.fiscal_year}`}>
+                        {`${item.duration} ${item.fiscal_year}`}
+                      </th>
+                    );
                   })}
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   {data.map((item) => {
-                    return <td key={item.date}>{item[column]}</td>;
+                    return (
+                      <td
+                        key={`${item.duration} ${item.fiscal_year}`}
+                        style={td_style(item[column])}
+                      >
+                        {numberFormat(item[column])}
+                      </td>
+                    );
                   })}
                 </tr>
               </tbody>
@@ -66,12 +89,26 @@ export default function InitDataTable({ title, data, CAFD, WCR, column }) {
               <tbody>
                 <tr>
                   {CAFD.map((item) => {
-                    return <td key={item.date}>{item.CAFD}</td>;
+                    return (
+                      <td
+                        key={`${item.duration} ${item.fiscal_year}`}
+                        style={td_style(item.CAFD)}
+                      >
+                        {numberFormat(item.CAFD)}
+                      </td>
+                    );
                   })}
                 </tr>
                 <tr>
                   {WCR.map((item) => {
-                    return <td key={item.date}>{item.WCR}</td>;
+                    return (
+                      <td
+                        key={`${item.duration} ${item.fiscal_year}`}
+                        style={td_style(item.WCR)}
+                      >
+                        {numberFormat(item.WCR)}
+                      </td>
+                    );
                   })}
                 </tr>
               </tbody>
