@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14.1-alpine
+    container_name: fundmanager-db
+    environment:
+      POSTGRES_USER: "narendran"
+      POSTGRES_PASSWORD: "narendran"
+      POSTGRES_DB: "revolve_db"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./flaskserver/datafiles/sql/createtables.sql:/docker-entrypoint-initdb.d/createtables.sql
+      - ./flaskserver/datafiles/csvfiles/demoloandetail.csv:/docker-entrypoint-initdb.d/demoloandetail.csv
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  backend:
+    build: ./flaskserver
+    container_name: fundmanager-backend
+    command: flask run --host=0.0.0.0
+    environment:
+      DB_USER: "narendran"
+      DB_PASSWORD: "narendran"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: "revolve_db"
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  frontend:
+    build: ./reactpage
+    container_name: fundmanager-frontend
+    command: npm run preview
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - backend
+
+  printenv:
+    image: busybox
+    command: printenv
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

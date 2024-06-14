@@ -1,24 +1,63 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import DropzoneError from "./dropzoneError";
 
 export default function FileDropzone() {
   const [returnFile, setReturnFile] = useState(0);
   const [deploymentFile, setDeploymentFile] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [returnUploadStatus, setReturnUploadStatus] = useState(500);
-  const [returnFileResult, setReturnFileResult] = useState("");
-  const [deploymentUploadStatus, setDeploymentUploadStatus] = useState(500);
-  const [deploymentFileResult, setDeploymentFileResult] = useState("");
-  const [outstandingBalanceStatus, setOutstandingBalanceStatus] = useState(500);
-  const [outstandingBalanceResult, setOutstandingBalanceResult] = useState("");
-  const [costOfCapitalStatus, setCostOfCapitalStatus] = useState(500);
-  const [costOfCapitalResult, setCostOfCapitalResult] = useState("");
-  const [cashFlowStatus, setCashFlowStatus] = useState(500);
-  const [cashFlowResult, setCashFlowResult] = useState("");
-  const [feeScheduleStatus, setFeeScheduleStatus] = useState(500);
-  const [feeScheduleResult, setFeeScheduleResult] = useState("");
-
+  const [sequenceCompleted, setSequenceCompleted] = useState(false);
+  const [apiCall, setApiCall] = useState({
+    reset: {
+      status: 0,
+      result: "",
+      filename: "reset.sql",
+      hasRun: false,
+    },
+    capitalreturnschedule: {
+      status: 0,
+      result: "",
+      filename: "capitalreturnschedule.json",
+      hasRun: false,
+    },
+    capitaldeploymentschedule: {
+      status: 0,
+      result: "",
+      filename: "capitaldeploymentschedule.json",
+      hasRun: false,
+    },
+    capitaloutstandingbalance: {
+      status: 0,
+      result: "",
+      filename: "capitaloutstandingbalance.sql",
+      hasRun: false,
+    },
+    costofcapital: {
+      status: 0,
+      result: "",
+      filename: "costofcapital.sql",
+      hasRun: false,
+    },
+    cashflowschedule: {
+      status: 0,
+      result: "",
+      filename: "cashflow_schedule.sql",
+      hasRun: false,
+    },
+    feeschedule: {
+      status: 0,
+      result: "",
+      filename: "fee_schedule.sql",
+      hasRun: false,
+    },
+    missingdurations: {
+      status: 0,
+      result: "",
+      filename: "missingdurations.sql",
+      hasRun: false,
+    },
+  });
   const [dropStyle, setDropStyle] = useState({
     backgroundColor: "white",
     padding: "5%",
@@ -26,6 +65,14 @@ export default function FileDropzone() {
     borderRadius: "15px",
     textAlign: "center",
   });
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "scroll";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
   function display(status) {
     let style = { ...dropStyle };
     if (status == "success1") {
@@ -41,8 +88,9 @@ export default function FileDropzone() {
     }
     setDropStyle(style);
   }
-  function executeSqlFile(file) {
-    const requestData = { sql_file_path: file };
+  async function executeSqlFile(table) {
+    console.log("executing", apiCall[table].filename);
+    const requestData = { sql_file_path: apiCall[table].filename };
     var requestOptions = {
       method: "POST",
       headers: {
@@ -51,36 +99,41 @@ export default function FileDropzone() {
       body: JSON.stringify(requestData),
       redirect: "follow",
     };
-    fetch("/api/runsql", requestOptions)
-      .then((response) => {
-        console.log("file:", file, "status:", response.status);
-        if (file === "capitaloutstandingbalance.sql") {
-          setOutstandingBalanceStatus(response.status);
-        } else if (file === "costofcapital.sql") {
-          setCostOfCapitalStatus(response.status);
-        } else if (file === "cashflow_schedule.sql") {
-          setCashFlowStatus(response.status);
-        } else if (file === "fee_schedule.sql") {
-          setFeeScheduleStatus(response.status);
-        }
-        return response.text();
-      })
-      .then((result) => {
-        console.log(result);
+
+    if (apiCall[table].status !== 200) {
+      try {
+        const response = await fetch("/api/runsql", requestOptions);
+        const result = await response.text();
         const parsedResult = JSON.parse(result);
-        if (file === "capitaloutstandingbalance.sql") {
-          setOutstandingBalanceResult(parsedResult.output);
-        } else if (file === "costofcapital.sql") {
-          setCostOfCapitalResult(parsedResult.output);
-        } else if (file === "cashflow_schedule.sql") {
-          setCashFlowResult(parsedResult.output);
-        } else if (file === "fee_schedule.sql") {
-          setFeeScheduleResult(parsedResult.output);
+
+        if (table == "reset") {
+          return new Promise((resolve) => {
+            setApiCall((prev) => {
+              const newDict = { ...prev };
+              newDict[table].status = response.status;
+              newDict[table].result = parsedResult.output;
+              resolve(newDict[table].status);
+              return newDict;
+            });
+          });
+        } else {
+          setApiCall((prev) => {
+            const newDict = { ...prev };
+            newDict[table].status = response.status;
+            if (response.status === 200) {
+              newDict[table].hasRun = true;
+            }
+            newDict[table].result = parsedResult.output;
+            return newDict;
+          });
         }
-      })
-      .catch((error) => console.log("error", error));
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
   }
-  function uploadFile(file, table) {
+
+  async function uploadFile(file, table) {
     const formData = new FormData();
     formData.append("table_name", table);
     formData.append("file", file);
@@ -91,51 +144,77 @@ export default function FileDropzone() {
       body: formData,
       redirect: "follow",
     };
-    fetch("/api/upload", requestOptions)
-      .then((response) => {
-        if (table === "capitalreturnschedule") {
-          setReturnUploadStatus(response.status);
-        } else if (table === "capitaldeploymentschedule") {
-          setDeploymentUploadStatus(response.status);
-        }
-        return response.text();
-      })
-      .then((result) => {
-        console.log("result:", result);
-        if (table === "capitalreturnschedule") {
-          setReturnFileResult(result);
-        } else if (table === "capitaldeploymentschedule") {
-          setDeploymentFileResult(result);
-        }
-      })
-      .catch((error) => {
-        console.log("error:", error);
-      });
-  }
-  useEffect(() => {
-    if (returnUploadStatus === 200 && deploymentUploadStatus === 200) {
-      executeSqlFile("capitaloutstandingbalance.sql");
-    }
-  }, [returnUploadStatus, deploymentUploadStatus]);
 
-  useEffect(() => {
-    console.log("outstandingStatus:", outstandingBalanceStatus);
-    if (outstandingBalanceStatus === 200) {
-      executeSqlFile("costofcapital.sql");
+    try {
+      const response = await fetch("/api/upload", requestOptions);
+      const result = await response.text();
+
+      setApiCall((prev) => {
+        const newDict = { ...prev };
+        newDict[table].status = response.status;
+        newDict[table].result = result;
+        if (response.status === 200) {
+          newDict[table].hasRun = true;
+        }
+        return newDict;
+      });
+    } catch (error) {
+      console.log("error:", error);
     }
-  }, [outstandingBalanceStatus]);
-  useEffect(() => {
-    console.log("costofcapital:", costOfCapitalStatus);
-    if (costOfCapitalStatus === 200) {
-      executeSqlFile("cashflow_schedule.sql");
+  }
+  const resetAndUpload = async () => {
+    if (!apiCall.reset.hasRun) {
+      await executeSqlFile("reset");
+      if (apiCall.reset.status === 200) {
+        console.log("uploading");
+        uploadedFiles.map((item) => uploadFile(item.file, item.table_name));
+      } else {
+        console.log("not uploading");
+      }
     }
-  }, [costOfCapitalStatus]);
+  };
   useEffect(() => {
-    console.log("cashflowschedule:", cashFlowStatus);
-    if (cashFlowStatus === 200) {
-      executeSqlFile("fee_schedule.sql");
-    }
-  }, [cashFlowStatus]);
+    const runSequence = async () => {
+      if (!sequenceCompleted) {
+        if (
+          apiCall.capitaldeploymentschedule.status === 200 &&
+          apiCall.capitalreturnschedule.status === 200
+        ) {
+          if (!apiCall.capitaloutstandingbalance.hasRun)
+            await executeSqlFile("capitaloutstandingbalance");
+          if (apiCall.capitaloutstandingbalance.status === 200) {
+            if (!apiCall.costofcapital.hasRun)
+              await executeSqlFile("costofcapital");
+            if (apiCall.costofcapital.status === 200) {
+              if (!apiCall.cashflowschedule.hasRun)
+                await executeSqlFile("cashflowschedule");
+              if (apiCall.cashflowschedule.status === 200) {
+                if (!apiCall.feeschedule.hasRun)
+                  await executeSqlFile("feeschedule");
+                if (apiCall.feeschedule.status == 200) {
+                  if (!apiCall.missingdurations.hasRun)
+                    await executeSqlFile("missingdurations");
+                  if (apiCall.missingdurations.status === 200) {
+                    setSequenceCompleted(true);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    runSequence();
+  }, [
+    apiCall.capitaldeploymentschedule.status,
+    apiCall.capitalreturnschedule.status,
+    apiCall.capitaloutstandingbalance.status,
+    apiCall.costofcapital.status,
+    apiCall.cashflowschedule.status,
+    apiCall.feeschedule.status,
+    apiCall.missingdurations.status,
+  ]);
+
   const onDrop = useCallback(
     (acceptedFiles) => {
       let newUploadedFiles = [...uploadedFiles];
@@ -218,51 +297,37 @@ export default function FileDropzone() {
                   .join(", ")}`
               : ""}
           </p>
-          <div
-            className="container"
-            style={{
-              border: "1px solid black",
-              borderRadius: "15px",
-              textAlign: "left",
-              background: "antiquewhite",
-              padding: "2%",
-              whiteSpace: "pre-line",
-              display: `${
-                deploymentFileResult != "" &&
-                returnFileResult != "" &&
-                outstandingBalanceResult != "" &&
-                costOfCapitalResult != ""
-                  ? "block"
-                  : "none"
-              }`,
-              height: "30vh",
-              overflow: "scroll",
-            }}
-          >
-            <p>{deploymentFileResult}</p>
-            <p>{returnFileResult}</p>
-            <p>capitaloutstandingbalance :</p>
-            <p>{outstandingBalanceResult}</p>
-            <p>costofcapital :</p>
-            <p>{costOfCapitalResult}</p>
-            <p>cashflow :</p>
-            <p>{cashFlowResult}</p>
-            <p>feeschedule :</p>
-            <p>{feeScheduleResult}</p>
-          </div>
         </div>
+
         <br />
         <div
           className={`container btn btn-primary ${
             returnFile === 1 && deploymentFile === 1 ? "" : "disabled"
           }`}
-          onClick={() =>
-            uploadedFiles.map((item) => uploadFile(item.file, item.table_name))
-          }
+          onClick={() => resetAndUpload()}
         >
           update database
         </div>
+
+        <div
+          className="container"
+          style={{
+            display: "grid",
+            gap: "20px" /* Adjust the gap between items as needed */,
+            gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
+            padding: "20px",
+          }}
+        >
+          {Object.keys(apiCall).map((table) => (
+            <DropzoneError key={table} table={table} apiCall={apiCall} />
+          ))}
+        </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </>
   );
 }

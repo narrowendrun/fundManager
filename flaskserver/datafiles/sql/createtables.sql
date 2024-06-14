@@ -254,3 +254,7 @@ CREATE TABLE loan_details (
     liquidation_type VARCHAR(100),
     FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
+COPY loan_details
+FROM '/docker-entrypoint-initdb.d/demoloandetail.csv'
+DELIMITER ','
+CSV HEADER;

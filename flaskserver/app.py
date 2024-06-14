@@ -1,17 +1,24 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 import os
 import json
 from sqlalchemy import text, delete
 import subprocess
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-# app.json_encoder = CustomJSONEncoder
+CORS(app)
 
 # Load environment variables
-from dotenv import load_dotenv
-dotenv_path = 'datafiles/makefile.env'
+dotenv_path = './.env'
 load_dotenv(dotenv_path)
+# Debugging: Print loaded environment variables
+print(f"DB_USER: {os.getenv('DB_USER')}")
+print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
+print(f"DB_HOST: {os.getenv('DB_HOST')}")
+print(f"DB_PORT: {os.getenv('DB_PORT')}")
+print(f"DB_NAME: {os.getenv('DB_NAME')}")
 
 # Configure the database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
@@ -47,13 +54,16 @@ def execute_sql_file(sql_file_path):
         '-f', sql_file_path
     ]
     
-    # If password is provided, include it in the command
-    if password:
-        psql_command.extend(['-W', password])
+    # # If password is provided, include it in the command
+    # if password:
+    #     psql_command.extend(['-W', password])
     
+    # Use PGPASSWORD environment variable for password
+    env = os.environ.copy()
+    env['PGPASSWORD'] = password
     # Execute the psql command
     try:
-        output = subprocess.check_output(psql_command, stderr=subprocess.STDOUT)
+        output = subprocess.check_output(psql_command, stderr=subprocess.STDOUT, env=env)
         return output.decode('utf-8')
     except subprocess.CalledProcessError as e:
         return e.output.decode('utf-8')
@@ -81,69 +91,20 @@ class CapitalDeploymentSchedule(db.Model):
     junior = db.Column(db.Float, nullable=True)
     classa = db.Column(db.Float, nullable=True)
     classb = db.Column(db.Float, nullable=True)
-    
+
+@app.route('/api/debug_env', methods=['GET'])
+def debug_env():
+    env_vars = {
+        'DB_USER': os.getenv('DB_USER'),
+        'DB_PASSWORD': os.getenv('DB_PASSWORD'),
+        'DB_HOST': os.getenv('DB_HOST'),
+        'DB_PORT': os.getenv('DB_PORT'),
+        'DB_NAME': os.getenv('DB_NAME')
+    }
+    return jsonify(env_vars)    
 @app.route('/api/welcome', methods=['GET'])
 def welcome():
     return jsonify('welcome',200)
-# Route to upload JSON file and insert data into the 'capitalreturnschedule' table
-# @app.route('/api/upload/returnschedule', methods=['POST'])
-# def upload_file_returns():
-#     if 'file' not in request.files:
-#         return jsonify('No file part')
-    
-#     file = request.files['file']
-#     if file.filename == '':
-#         return jsonify('No selected file')
-#     if file:
-#         filename = file.filename
-#         file.save(filename)
-#         with open(filename, 'r') as f:
-#             data = json.load(f)
-#             for entry in data:
-#                 print("Entry:", entry)
-#                 records = CapitalReturnSchedule(
-#                     fund_id = entry['fund_id'],
-#                     date = entry['date'],
-#                     senior = entry['senior'],
-#                     mezz = entry['mezz'],
-#                     junior = entry['junior'],
-#                     classa = entry['classa'],
-#                     classb = entry['classb']
-                    
-#                 )
-#                 db.session.add(records)
-#             db.session.commit()
-
-#         os.remove(filename)
-#         return 'File uploaded successfully and data inserted into database'
-
-# @app.route('/api/upload/deploymentschedule', methods=['POST'])
-# def upload_file_deployment():
-#     if 'file' not in request.files:
-#         return jsonify('No file part')
-#     file = request.files['file']
-#     if file.filename == '':
-#         return jsonify('No selected file')
-#     if file:
-#         filename = file.filename
-#         file.save(filename)
-#         with open(filename, 'r') as f:
-#             data = json.load(f)
-#             for entry in data:
-                
-#                 records = CapitalDeploymentSchedule(
-#                     fund_id = entry['fund_id'],
-#                     date = entry['date'],
-#                     senior = entry['senior'],
-#                     mezz = entry['mezz'],
-#                     junior = entry['junior'],
-#                     classa = entry['classa'],
-#                     classb = entry['classb']
-#                 )
-#                 db.session.add(records)            
-#             db.session.commit()
-#         os.remove(filename)
-#         return 'File uploaded successfully and data inserted into database'
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -238,5 +199,6 @@ def run_sql_file():
 
     return jsonify({'output': output}), 200
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    # app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)

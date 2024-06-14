@@ -8,9 +8,19 @@ const outDir = resolve(__dirname, "dist");
 export default defineConfig({
   root,
   server: {
+    port: 8000,
     proxy: {
-      "/api": "http://127.0.0.1:5000/",
+      "/api": {
+        target: "http://backend:5000",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "/api/"),
+      },
+      // "/api": "http://127.0.0.1:5000",
     },
+  },
+  preview: {
+    port: 3000,
+    host: "0.0.0.0",
   },
   plugins: [react()],
   build: {
