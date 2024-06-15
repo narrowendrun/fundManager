@@ -45,8 +45,14 @@ export default function InitDataTable({ title, data, CAFD, WCR, column }) {
                 <tr>
                   {data.map((item) => {
                     return (
-                      <th key={`${item.duration} ${item.fiscal_year}`}>
-                        {`${item.duration} ${item.fiscal_year}`}
+                      <th
+                        key={`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
+                      >
+                        {`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
                       </th>
                     );
                   })}

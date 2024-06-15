@@ -4,7 +4,6 @@ export default function DropzoneError({ table, apiCall }) {
   const style = {
     border: "1px solid green",
     borderRadius: "15px",
-    textAlign: "left",
     background: `${apiCall[table].status == 200 ? "lightgreen" : "red"}`,
     padding: "5%",
     whiteSpace: "pre-line",

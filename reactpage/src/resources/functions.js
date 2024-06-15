@@ -66,3 +66,33 @@ export const numberFormat = (value) =>
     style: "currency",
     currency: "USD",
   }).format(value);
+
+// queries.js
+export const getQuarterlyQuery = (type, fundID) => `
+SELECT 
+  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+  EXTRACT(YEAR FROM date) AS fiscal_year,
+  SUM(${type}) AS due 
+FROM costofcapital 
+WHERE fund_id=${fundID} 
+GROUP BY duration, fiscal_year 
+ORDER BY fiscal_year, duration`;
+
+export const getBiannualQuery = (type, fundID) => `
+SELECT 
+  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
+  EXTRACT(YEAR FROM date) AS fiscal_year,
+  SUM(${type}) AS due 
+FROM costofcapital 
+WHERE fund_id=${fundID} 
+GROUP BY duration, fiscal_year 
+ORDER BY fiscal_year, duration`;
+
+export const getAnnualQuery = (type, fundID) => `
+SELECT 
+  EXTRACT(YEAR FROM date) AS fiscal_year,
+  SUM(${type}) AS due 
+FROM costofcapital 
+WHERE fund_id=${fundID} 
+GROUP BY fiscal_year 
+ORDER BY fiscal_year`;

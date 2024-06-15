@@ -1,13 +1,5 @@
 import { numberFormat } from "../resources/functions";
-export default function DataTable({
-  title,
-  data,
-  paid,
-  due,
-  accrued,
-  CAFD,
-  WCR,
-}) {
+export default function DataTable({ title, data, show, index }) {
   const td_style = (value) => {
     if (value < 0) {
       return { background: "red" };
@@ -30,10 +22,10 @@ export default function DataTable({
           borderRadius: "15px",
         }}
       >
-        <div className="container" style={{ color: "white", fontSize: "2em" }}>
+        <div style={{ color: "white", fontSize: "2em" }}>
           <p>{title}</p>
         </div>
-        <div className="container dataTable">
+        <div className="dataTable">
           <div className="tableContainerHeadings">
             <table>
               <thead>
@@ -41,14 +33,18 @@ export default function DataTable({
                   <th>Date</th>
                 </tr>
                 <tr>
-                  <th>Due</th>
+                  <th>{!show ? "Value" : "Due"}</th>
                 </tr>
-                <tr>
-                  <th>Paid</th>
-                </tr>
-                <tr>
-                  <th>Accrued</th>
-                </tr>
+                {show && (
+                  <>
+                    <tr>
+                      <th>Paid</th>
+                    </tr>
+                    <tr>
+                      <th>Accrued</th>
+                    </tr>
+                  </>
+                )}
               </thead>
             </table>
           </div>
@@ -60,54 +56,77 @@ export default function DataTable({
                   {data.map((item) => {
                     return (
                       <th
-                        key={`${item.duration} ${item.fiscal_year}`}
-                      >{`${item.duration} ${item.fiscal_year}`}</th>
+                        key={`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
+                      >{`${item.duration ? item.duration : "Y"} ${
+                        item.fiscal_year
+                      }`}</th>
                     );
                   })}
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  {due.map((item) => {
+                  {data.map((item) => {
                     return (
-                      <td key={item.index} style={td_style(item.due)}>
+                      <td
+                        key={`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
+                        style={td_style(item.due)}
+                      >
                         {numberFormat(item.due)}
                       </td>
                     );
                   })}
                 </tr>
-                <tr>
-                  {paid.map((item) => {
-                    return (
-                      <td key={item.index} style={td_style(item.paid)}>
-                        {numberFormat(item.paid)}
-                      </td>
-                    );
-                  })}
-                </tr>
-                <tr>
-                  {accrued.map((item) => {
-                    return (
-                      <td key={item.index} style={td_style(item.accrued)}>
-                        {numberFormat(item.accrued)}
-                      </td>
-                    );
-                  })}
-                </tr>
+                {show && (
+                  <>
+                    <tr>
+                      {data.map((item) => {
+                        return (
+                          <td
+                            key={`${item.duration ? item.duration : "Y"} ${
+                              item.fiscal_year
+                            }`}
+                            style={td_style(item.paid)}
+                          >
+                            {numberFormat(item.paid)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                    <tr>
+                      {data.map((item) => {
+                        return (
+                          <td
+                            key={`${item.duration ? item.duration : "Y"} ${
+                              item.fiscal_year
+                            }`}
+                            style={td_style(item.accrued)}
+                          >
+                            {numberFormat(item.accrued)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </div>
         </div>
         <br />
-        <div className="container dataTable">
+        <div className="dataTable">
           <div className="tableContainerHeadings">
             <table>
               <thead>
                 <tr>
-                  <th>CAFD-n</th>
+                  <th>CAFD-{index}</th>
                 </tr>
                 <tr>
-                  <th>WCR-n</th>
+                  <th>WCR-{index}</th>
                 </tr>
               </thead>
             </table>
@@ -117,18 +136,28 @@ export default function DataTable({
             <table>
               <tbody>
                 <tr>
-                  {CAFD.map((item) => {
+                  {data.map((item) => {
                     return (
-                      <td key={item.index} style={td_style(item.CAFD)}>
+                      <td
+                        key={`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
+                        style={td_style(item.CAFD)}
+                      >
                         {numberFormat(item.CAFD)}
                       </td>
                     );
                   })}
                 </tr>
                 <tr>
-                  {WCR.map((item) => {
+                  {data.map((item) => {
                     return (
-                      <td key={item.index} style={td_style(item.WCR)}>
+                      <td
+                        key={`${item.duration ? item.duration : "Y"} ${
+                          item.fiscal_year
+                        }`}
+                        style={td_style(item.WCR)}
+                      >
                         {numberFormat(item.WCR)}
                       </td>
                     );

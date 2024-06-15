@@ -54,7 +54,7 @@ export default function FileDropzone() {
     missingdurations: {
       status: 0,
       result: "",
-      filename: "missingdurations.sql",
+      filename: "new.sql",
       hasRun: false,
     },
   });

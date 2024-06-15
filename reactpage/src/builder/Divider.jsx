@@ -4,12 +4,7 @@ export default function Divider({
   button,
   numberOfOutflows,
   setOutflowLineItems,
-  setLineData,
-  setDue,
-  setPaid,
-  setAccrued,
-  setCAFD,
-  setWCR,
+  setOutFlowData,
 }) {
   const style = {
     marginBottom: "20px",
@@ -40,17 +35,9 @@ export default function Divider({
         allocation: "100",
       },
     ]);
-    setLineData({});
-    setDue({});
-    setPaid({});
-    setAccrued({});
-    setCAFD((prev) => {
-      const newCAFD = prev[1];
-      return { 1: newCAFD };
-    });
-    setWCR((prev) => {
-      const newWCR = prev[1];
-      return { 1: newWCR };
+    setOutFlowData((prev) => {
+      const newArray = [...prev];
+      return newArray.slice(0, 1);
     });
   }
   return (
