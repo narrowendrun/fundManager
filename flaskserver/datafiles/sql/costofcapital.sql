@@ -12,14 +12,14 @@ CREATE TABLE costofcapital (
     FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
 
--- Step 2: Populate the 'costofcapital' table
+-- Step 2: Populate the 'costofcapital' table with adjusted subqueries
 INSERT INTO costofcapital (fund_id, date, senior, mezz, junior, classa, classb)
 SELECT
     cob.fund_id,
     cob.date,
-    cob.senior * (SELECT interest_rate FROM debt_structure WHERE debt_type='senior' AND fund_id=cob.fund_id) / 36500,
-    cob.mezz * (SELECT interest_rate FROM debt_structure WHERE debt_type='mezz' AND fund_id=cob.fund_id) / 36500,
-    cob.junior * (SELECT interest_rate FROM debt_structure WHERE debt_type='junior' AND fund_id=cob.fund_id) / 36500,
-    cob.classa * (SELECT preferred_percent FROM equity_structure WHERE equity_type='classa' AND fund_id=cob.fund_id) / 36500,
-    cob.classb * (SELECT preferred_percent FROM equity_structure WHERE equity_type='classb' AND fund_id=cob.fund_id) / 36500
+    cob.senior * (SELECT MAX(interest_rate) FROM debt_structure WHERE debt_type='senior' AND fund_id=cob.fund_id) / 36500,
+    cob.mezz * (SELECT MAX(interest_rate) FROM debt_structure WHERE debt_type='mezz' AND fund_id=cob.fund_id) / 36500,
+    cob.junior * (SELECT MAX(interest_rate) FROM debt_structure WHERE debt_type='junior' AND fund_id=cob.fund_id) / 36500,
+    cob.classa * (SELECT MAX(preferred_percent) FROM equity_structure WHERE equity_type='classa' AND fund_id=cob.fund_id) / 36500,
+    cob.classb * (SELECT MAX(preferred_percent) FROM equity_structure WHERE equity_type='classb' AND fund_id=cob.fund_id) / 36500
 FROM capitaloutstandingbalance cob;

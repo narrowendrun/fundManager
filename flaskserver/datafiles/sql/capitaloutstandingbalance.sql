@@ -1,3 +1,65 @@
+-- For capitaldeploymentschedule
+
+-- Step 1: Create a temporary table to store all the dates within the range for each fund_id
+CREATE TEMP TABLE date_series_deploy AS
+SELECT DISTINCT fund_id, generate_series(
+    (SELECT MIN(date) FROM capitaldeploymentschedule WHERE fund_id = cds.fund_id),
+    CURRENT_DATE,  -- Extend the series to the current date
+    '1 day'::interval
+) AS date
+FROM capitaldeploymentschedule cds;
+
+-- Step 2: Insert the missing dates into the original table with zeros in all columns for each fund_id
+INSERT INTO capitaldeploymentschedule (fund_id, date, senior, mezz, junior, classa, classb)
+SELECT
+    ds.fund_id,
+    ds.date,
+    0 AS senior,
+    0 AS mezz,
+    0 AS junior,
+    0 AS classa,
+    0 AS classb
+FROM date_series_deploy ds
+LEFT JOIN capitaldeploymentschedule cds
+ON ds.fund_id = cds.fund_id AND ds.date = cds.date
+WHERE cds.date IS NULL;
+
+-- Step 3: Drop the temporary table as it is no longer needed
+DROP TABLE date_series_deploy;
+
+-- For capitalreturnschedule
+
+-- Step 1: Create a temporary table to store all the dates within the range for each fund_id
+CREATE TEMP TABLE date_series_return AS
+SELECT DISTINCT fund_id, generate_series(
+    (SELECT MIN(date) FROM capitalreturnschedule WHERE fund_id = crs.fund_id),
+    CURRENT_DATE,  -- Extend the series to the current date
+    '1 day'::interval
+) AS date
+FROM capitalreturnschedule crs;
+
+-- Step 2: Insert the missing dates into the original table with zeros in all columns for each fund_id
+INSERT INTO capitalreturnschedule (fund_id, date, senior, mezz, junior, classa, classb)
+SELECT
+    ds.fund_id,
+    ds.date,
+    0 AS senior,
+    0 AS mezz,
+    0 AS junior,
+    0 AS classa,
+    0 AS classb
+FROM date_series_return ds
+LEFT JOIN capitalreturnschedule crs
+ON ds.fund_id = crs.fund_id AND ds.date = crs.date
+WHERE crs.date IS NULL;
+
+-- Step 3: Drop the temporary table as it is no longer needed
+DROP TABLE date_series_return;
+
+
+
+
+
 -- Step 1: Create the new table with an additional 'total' column
 CREATE TABLE capitaloutstandingbalance (
     id SERIAL PRIMARY KEY,

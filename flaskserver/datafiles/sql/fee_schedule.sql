@@ -12,10 +12,10 @@ SELECT
     COALESCE(cb.fund_id, ld.fund_id) AS fund_id,
     COALESCE(cb.date, ld.acq_date) AS date,
     COALESCE(cb.capitalbalance, 0) AS capitalbalance,
-    COALESCE(cb.capitalbalance, 0) * COALESCE(fi.asset_management, 0) / 1200 AS asset_management_fee,
+    COALESCE(cb.capitalbalance, 0) * COALESCE(fi.asset_management, 0) / 36500 AS asset_management_fee,
     COALESCE(ld.acquisition_price, 0) AS acquisition_price,
     COALESCE(ld.acquisition_price, 0) * COALESCE(fi.acquisition, 0) / 100 AS acquisition_fee,
-    (COALESCE(cb.capitalbalance, 0) * COALESCE(fi.asset_management, 0) / 1200) + 
+    (COALESCE(cb.capitalbalance, 0) * COALESCE(fi.asset_management, 0) / 36500) + 
     (COALESCE(ld.acquisition_price, 0) * COALESCE(fi.acquisition, 0) / 100) AS total_fee
 FROM (
     SELECT

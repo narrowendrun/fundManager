@@ -21,10 +21,34 @@ export function postQuery(payload, action) {
 }
 
 export function querier(table, fundID, fields) {
-  if (!fields) {
-    return { query: `SELECT * FROM ${table} WHERE fund_id=${fundID}` };
+  let non_zero_values = `SELECT
+    TO_CHAR(date_trunc('month', date), 'YYYY-MM-DD') AS date,
+    SUM(senior) AS senior,
+    SUM(mezz) AS mezz,
+    SUM(junior) AS junior,
+    SUM(classa) AS classa,
+    SUM(classb) AS classb
+FROM
+    ${table}
+WHERE
+    fund_id = ${fundID}
+GROUP BY
+    date_trunc('month', date)
+ORDER BY
+    date_trunc('month', date);`;
+  if (
+    table == "capitalreturnschedule" ||
+    table == "capitaldeploymentschedule"
+  ) {
+    return { query: non_zero_values };
   } else {
-    return { query: `SELECT ${fields} FROM ${table} WHERE fund_id=${fundID}` };
+    if (!fields) {
+      return { query: `SELECT * FROM ${table} WHERE fund_id=${fundID}` };
+    } else {
+      return {
+        query: `SELECT ${fields} FROM ${table} WHERE fund_id=${fundID}`,
+      };
+    }
   }
 }
 function updateDataset(rawData) {
@@ -65,7 +89,9 @@ export const numberFormat = (value) =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Math.round(value));
 
 // queries.js
 export const getQuarterlyQuery = (type, fundID) => `

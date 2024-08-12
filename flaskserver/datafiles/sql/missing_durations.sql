@@ -1,3 +1,27 @@
+-- Delete from capitaloutstandingbalance
+DELETE FROM capitaloutstandingbalance
+USING fund_information
+WHERE capitaloutstandingbalance.fund_id = fund_information.fund_id
+  AND capitaloutstandingbalance.date < fund_information.start_date;
+
+-- Delete from fee_schedule
+DELETE FROM fee_schedule
+USING fund_information
+WHERE fee_schedule.fund_id = fund_information.fund_id
+  AND fee_schedule.date < fund_information.start_date;
+
+-- Delete from cashflow_schedule
+DELETE FROM cashflow_schedule
+USING fund_information
+WHERE cashflow_schedule.fund_id = fund_information.fund_id
+  AND cashflow_schedule.date < fund_information.start_date;
+
+-- Delete from costofcapital
+DELETE FROM costofcapital
+USING fund_information
+WHERE costofcapital.fund_id = fund_information.fund_id
+  AND costofcapital.date < fund_information.start_date;
+
 -- Create CTEs for missing quarters for each fund_id in cashflow_schedule and costofcapital
 WITH all_quarters AS (
     SELECT 

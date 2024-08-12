@@ -1,27 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 import os
 import json
-from sqlalchemy import text, delete
+from sqlalchemy import text,  Table, Column, Integer, Float, Date, MetaData
 import subprocess
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-CORS(app)
 
 # Load environment variables
 dotenv_path = './.env'
 load_dotenv(dotenv_path)
-# Debugging: Print loaded environment variables
-print(f"DB_USER: {os.getenv('DB_USER')}")
-print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
-print(f"DB_HOST: {os.getenv('DB_HOST')}")
-print(f"DB_PORT: {os.getenv('DB_PORT')}")
-print(f"DB_NAME: {os.getenv('DB_NAME')}")
 
 # Configure the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+    f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
@@ -53,11 +48,7 @@ def execute_sql_file(sql_file_path):
         '-p', port,
         '-f', sql_file_path
     ]
-    
-    # # If password is provided, include it in the command
-    # if password:
-    #     psql_command.extend(['-W', password])
-    
+
     # Use PGPASSWORD environment variable for password
     env = os.environ.copy()
     env['PGPASSWORD'] = password
@@ -68,24 +59,24 @@ def execute_sql_file(sql_file_path):
     except subprocess.CalledProcessError as e:
         return e.output.decode('utf-8')
 
-# Define the Capital Returns Model
+# Define the Capital Return Schedule model
 class CapitalReturnSchedule(db.Model):
     __tablename__ = 'capitalreturnschedule'
     id = db.Column(db.BIGINT, primary_key=True)
-    fund_id=db.Column(db.Integer, nullable=False)
-    date = db.Column(db.Date,nullable=False)
+    fund_id = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     senior = db.Column(db.Float, nullable=True)
     mezz = db.Column(db.Float, nullable=True)
     junior = db.Column(db.Float, nullable=True)
     classa = db.Column(db.Float, nullable=True)
     classb = db.Column(db.Float, nullable=True)
 
-# Define the Capital Returns Model
+# Define the Capital Deployment Schedule model
 class CapitalDeploymentSchedule(db.Model):
     __tablename__ = 'capitaldeploymentschedule'
     id = db.Column(db.BIGINT, primary_key=True)
-    fund_id=db.Column(db.Integer, nullable=False)
-    date = db.Column(db.Date,nullable=False)
+    fund_id = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     senior = db.Column(db.Float, nullable=True)
     mezz = db.Column(db.Float, nullable=True)
     junior = db.Column(db.Float, nullable=True)
@@ -102,71 +93,48 @@ def debug_env():
         'DB_NAME': os.getenv('DB_NAME')
     }
     return jsonify(env_vars)    
+
 @app.route('/api/welcome', methods=['GET'])
 def welcome():
-    return jsonify('welcome',200)
+    return jsonify({'message': 'welcome'}), 200
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
-    # Check if the request contains a file
-    if 'file' not in request.files:
-        return jsonify('No file part')
+    if 'file' not in request.files or 'table_name' not in request.form:
+        return jsonify({'error': 'File or table name is missing'}), 400
     
     file = request.files['file']
+    table_name = request.form['table_name']
     
-    # Check if a file is selected
     if file.filename == '':
-        return jsonify('No selected file')
+        return jsonify({'error': 'No selected file'}), 400
     
-    # Check if the JSON body contains the necessary information
-    if 'table_name' not in request.form:
-        return jsonify('No table name provided')
-    
-    # Save the uploaded file
     filename = file.filename
     file.save(filename)
     
-    # Read the JSON data from the file
     with open(filename, 'r') as f:
         data = json.load(f)
     
-    # Get the table name from the JSON body
-    table_name = request.form['table_name']
+    model_mapping = {
+        'capitalreturnschedule': CapitalReturnSchedule,
+        'capitaldeploymentschedule': CapitalDeploymentSchedule
+    }
     
-    # Insert data into the appropriate table
+    if table_name not in model_mapping:
+        os.remove(filename)
+        return jsonify({'error': 'Invalid table name'}), 400
+    
+    model = model_mapping[table_name]
+    
     for entry in data:
-        records = None
-        if table_name == 'capitalreturnschedule':
-            records = CapitalReturnSchedule(
-                fund_id = entry['fund_id'],
-                date = entry['date'],
-                senior = entry['senior'],
-                mezz = entry['mezz'],
-                junior = entry['junior'],
-                classa = entry['classa'],
-                classb = entry['classb']
-            )
-        elif table_name == 'capitaldeploymentschedule':
-            records = CapitalDeploymentSchedule(
-                fund_id = entry['fund_id'],
-                date = entry['date'],
-                senior = entry['senior'],
-                mezz = entry['mezz'],
-                junior = entry['junior'],
-                classa = entry['classa'],
-                classb = entry['classb']
-            )
-        
-        # Add records to the session
-        db.session.add(records)
+        record = model(**entry)
+        db.session.add(record)
     
-    # Commit the changes to the database
     db.session.commit()
-    
-    # Remove the uploaded file
     os.remove(filename)
     
-    return jsonify(table_name+" uploaded successfully and data inserted into database")
+    return jsonify({'message': f'Data inserted into {table_name}'}), 200
+
 @app.route('/api/query', methods=['POST'])
 def execute_query():
     query = request.json.get('query', None)
@@ -176,14 +144,11 @@ def execute_query():
     try:
         with db.engine.connect() as connection:
             result = connection.execute(text(query))
-            rows = []
-            for row in result:
-                # Access each column value by index
-                formatted_row = [str(value) for value in row]  # Convert all values to strings
-                rows.append(dict(zip(result.keys(), formatted_row)))
+            rows = [dict(zip(result.keys(), [str(value) for value in row])) for row in result]
             return jsonify(rows)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 @app.route('/api/runsql', methods=['POST'])
 def run_sql_file():
     # Ensure the request contains the SQL file path
@@ -199,6 +164,200 @@ def run_sql_file():
 
     return jsonify({'output': output}), 200
 
+# @app.route('/api/create_table', methods=['POST'])
+# def create_table():
+#     """
+#     API endpoint to create a new table with the specified name and columns.
+
+#     Expected JSON body format:
+#     {
+#         "table_name": "your_table_name",
+#         "columns": ["total_fee", "classa"]
+#     }
+#     """
+#     data = request.json
+#     table_name = data.get('table_name')
+#     input_columns = data.get('columns', [])
+
+#     if not table_name or not input_columns:
+#         return jsonify({'error': 'Table name and columns are required'}), 400
+
+#     try:
+#         result = create_dynamic_table(table_name, input_columns)
+#         return jsonify({'message': result}), 200
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
+# def create_dynamic_table(table_name, input_columns):
+#     """
+#     Creates a new table with the specified name and columns in the database.
+
+#     Args:
+#         table_name (str): The name of the new table to be created.
+#         input_columns (list): A list of column names to be included in the table.
+        
+#     Returns:
+#         str: Success message if the table is created successfully.
+#     """
+#     # Define common columns
+#     common_columns = [
+#         Column('date', Date, nullable=False),
+#         Column('netproceeds', Float, nullable=True),
+#         Column('cafd-1', Float, nullable=True)
+#     ]
+
+#     # Create a metadata instance
+#     metadata = MetaData()
+
+#     # Define the table with the common columns
+#     columns = common_columns.copy()
+
+#     # Iterate over input columns and add the required columns dynamically
+#     for i, col in enumerate(input_columns, start=2):
+#         columns.append(Column(col, Float, nullable=True))
+#         columns.append(Column(f'allocation-{i}', Float, nullable=True))
+#         columns.append(Column(f'due-{i}', Float, nullable=True))
+#         columns.append(Column(f'paid-{i}', Float, nullable=True))
+#         columns.append(Column(f'accrued-{i}', Float, nullable=True))
+#         columns.append(Column(f'cafd-{i}', Float, nullable=True))
+
+#     # Create the table dynamically
+#     new_table = Table(table_name, metadata, *columns)
+
+#     # Use the metadata to create the table in the database
+#     with db.engine.connect() as connection:
+#         metadata.create_all(connection)
+#         connection.execute(text(f'COMMIT'))
+
+#     return f"Table '{table_name}' created successfully with columns: {', '.join(c.name for c in new_table.columns)}"
+
+
+@app.route('/api/waterfall', methods=['POST'])
+def create_table():
+    """
+    API endpoint to create a new table with the specified name and columns, and populate it with data.
+
+    Expected JSON body format:
+    {
+        "table_name": "your_table_name",
+        "columns": ["total_fee", "classa"],
+        "fund_id": "your_fund_id",
+        "mappings": {
+            "netproceeds": "cashflow_schedule",
+            "total_fee": "fee_schedule",
+            "classa": "costofcapital"
+        }
+    }
+    """
+    data = request.json
+    table_name = data.get('table_name')
+    input_columns = data.get('columns', [])
+    fund_id = data.get('fund_id')
+    mappings = data.get('mappings', {})
+
+    if not table_name or not input_columns or not fund_id or not mappings:
+        return jsonify({'error': 'Table name, columns, fund_id, and mappings are required'}), 400
+
+    try:
+        create_result = create_dynamic_table(table_name, input_columns)
+        populate_result = populate_dynamic_table(table_name, fund_id, mappings)
+        return jsonify({'message': f"{create_result}. {populate_result}"}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+def create_dynamic_table(table_name, input_columns):
+    """
+    Creates a new table with the specified name and columns in the database.
+
+    Args:
+        table_name (str): The name of the new table to be created.
+        input_columns (list): A list of column names to be included in the table.
+        
+    Returns:
+        str: Success message if the table is created successfully.
+    """
+    # Define common columns
+    common_columns = [
+        Column('date', Date, nullable=False),
+        Column('netproceeds', Float, nullable=True),
+        Column('cafd-1', Float, nullable=True)
+    ]
+
+    # Create a metadata instance
+    metadata = MetaData()
+
+    # Define the table with the common columns
+    columns = common_columns.copy()
+
+    # Iterate over input columns and add the required columns dynamically
+    for i, col in enumerate(input_columns, start=2):
+        columns.append(Column(col, Float, nullable=True))
+        columns.append(Column(f'allocation-{i}', Float, nullable=True))
+        columns.append(Column(f'due-{i}', Float, nullable=True))
+        columns.append(Column(f'paid-{i}', Float, nullable=True))
+        columns.append(Column(f'accrued-{i}', Float, nullable=True))
+        columns.append(Column(f'cafd-{i}', Float, nullable=True))
+
+    # Create the table dynamically
+    new_table = Table(table_name, metadata, *columns)
+
+    # Use the metadata to create the table in the database
+    with db.engine.connect() as connection:
+        metadata.create_all(connection)
+        connection.execute(text(f'COMMIT'))
+
+    return f"Table '{table_name}' created successfully with columns: {', '.join(c.name for c in new_table.columns)}"
+
+def populate_dynamic_table(table_name, fund_id, mappings):
+    """
+    Populates a table with data from specified mappings based on fund_id.
+
+    Args:
+        table_name (str): The name of the table to populate.
+        fund_id (str): The fund_id to filter the data.
+        mappings (dict): A dictionary with column names as keys and source tables as values.
+
+    Returns:
+        str: Success message if the table is populated successfully.
+    """
+    with db.engine.connect() as connection:
+        # Get distinct dates from all source tables to ensure all dates are covered
+        dates = set()
+        for column, source_table in mappings.items():
+            date_query = text(f"""
+                SELECT DISTINCT date
+                FROM {source_table}
+                WHERE fund_id = :fund_id
+            """)
+            result = connection.execute(date_query, {'fund_id': fund_id})
+            dates.update(row[0] for row in result)
+
+        # Insert rows for all distinct dates into the target table
+        for date in dates:
+            insert_query = text(f"""
+                INSERT INTO {table_name} (date)
+                VALUES (:date)
+                ON CONFLICT (date) DO NOTHING
+            """)
+            connection.execute(insert_query, {'date': date})
+
+        # Generate and execute queries for each mapping
+        for column, source_table in mappings.items():
+            update_query = text(f"""
+                UPDATE {table_name}
+                SET {column} = COALESCE(
+                    (SELECT {column} 
+                     FROM {source_table} 
+                     WHERE {source_table}.fund_id = :fund_id 
+                     AND {source_table}.date = {table_name}.date
+                     LIMIT 1), 0)
+            """)
+            connection.execute(update_query, {'fund_id': fund_id})
+        
+        # Commit the changes to the database
+        connection.execute(text('COMMIT'))
+
+    return f"Table '{table_name}' populated successfully with data from specified mappings."
+
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)

@@ -6,6 +6,8 @@ import OutFlowItem from "./OutFlowItem";
 import DataTable from "./DataTable";
 import React from "react";
 import useLogger from "../resources/useLogger";
+import SplitsTable from "./splits";
+import GraphOutput from "./GraphOutput";
 
 export default function Builder({ fundID, setFundID }) {
   const periods = {
@@ -16,6 +18,16 @@ export default function Builder({ fundID, setFundID }) {
                   EXTRACT(YEAR FROM date) AS fiscal_year,
                   SUM(net_proceeds) AS net_proceeds 
                 FROM cashflow_schedule 
+                WHERE fund_id=${fundID} 
+                GROUP BY duration, fiscal_year 
+                ORDER BY fiscal_year, duration`,
+      },
+      total_fee: {
+        query: `SELECT 
+                  CONCAT('Q', EXTRACT(QUARTER FROM date)) AS duration,
+                  EXTRACT(YEAR FROM date) AS fiscal_year,
+                  SUM(total_fee) AS due 
+                FROM fee_schedule 
                 WHERE fund_id=${fundID} 
                 GROUP BY duration, fiscal_year 
                 ORDER BY fiscal_year, duration`,
@@ -71,89 +83,13 @@ export default function Builder({ fundID, setFundID }) {
                 ORDER BY fiscal_year, duration`,
       },
     },
-    biannual: {
-      net_proceeds: {
-        query: `SELECT 
-                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(net_proceeds) AS net_proceeds 
-                FROM cashflow_schedule 
-                WHERE fund_id=${fundID} 
-                GROUP BY duration, fiscal_year 
-                ORDER BY fiscal_year, duration`,
-      },
-      senior: {
-        query: `SELECT 
-                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(senior) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY duration, fiscal_year 
-                ORDER BY fiscal_year, duration`,
-      },
-      mezz: {
-        query: `SELECT 
-                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(mezz) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY duration, fiscal_year 
-                ORDER BY fiscal_year, duration`,
-      },
-      junior: {
-        query: `SELECT 
-                  CONCAT('H', EXTRACT(MONTH FROM date) < 7 ? 1 : 2) AS duration,
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(junior) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY duration, fiscal_year 
-                ORDER BY fiscal_year, duration`,
-      },
-    },
-    annually: {
-      net_proceeds: {
-        query: `SELECT 
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(net_proceeds) AS net_proceeds 
-                FROM cashflow_schedule 
-                WHERE fund_id=${fundID} 
-                GROUP BY fiscal_year 
-                ORDER BY fiscal_year`,
-      },
-      senior: {
-        query: `SELECT 
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(senior) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY fiscal_year 
-                ORDER BY fiscal_year`,
-      },
-      mezz: {
-        query: `SELECT 
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(mezz) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY fiscal_year 
-                ORDER BY fiscal_year`,
-      },
-      junior: {
-        query: `SELECT 
-                  EXTRACT(YEAR FROM date) AS fiscal_year,
-                  SUM(junior) AS due 
-                FROM costofcapital 
-                WHERE fund_id=${fundID} 
-                GROUP BY fiscal_year 
-                ORDER BY fiscal_year`,
-      },
-    },
   };
   //dropdownlist for outflow items
   const [list, setList] = useState({
+    costoffee: {
+      title: "cost of fee",
+      values: ["total_fee"],
+    },
     costofequity: {
       title: "cost of debt",
       values: ["senior", "mezz", "junior"],
@@ -168,7 +104,7 @@ export default function Builder({ fundID, setFundID }) {
   const [frequency, setFrequency] = useState("");
 
   const [outFlowData, setOutFlowData] = useState([]);
-
+  const [graphCashFlows, setGraphCashFlows] = useState({});
   const handleDeleteLineItem = (index) => {
     setOutflowLineItems((prevItems) =>
       prevItems.filter((_, itemIndex) => itemIndex !== index)
@@ -221,7 +157,58 @@ export default function Builder({ fundID, setFundID }) {
     });
   }, [netProceeds]);
   // useLogger("lineitems", outflowLineItems);
-  useLogger("lineData", outFlowData);
+  // useLogger("lineData", outFlowData);
+  const cashflows = () => {
+    const cashflowArray = {};
+    for (let i = 1; i < outFlowData.length; i++) {
+      if (!cashflowArray[outFlowData[i].lineItem.title]) {
+        cashflowArray[outFlowData[i].lineItem.title] = [];
+        for (let j = 0; j < outFlowData[i].lineItem.data.length; j++) {
+          cashflowArray[outFlowData[i].lineItem.title].push(
+            outFlowData[i].lineItem.data[j].paid
+          );
+        }
+      } else {
+        for (let j = 0; j < outFlowData[i].lineItem.data.length; j++) {
+          cashflowArray[outFlowData[i].lineItem.title][j] +=
+            outFlowData[i].lineItem.data[j].paid;
+        }
+      }
+    }
+    cashflowArray.date = [];
+    if (outFlowData.length > 1) {
+      for (
+        let i = 0;
+        i < outFlowData[outFlowData.length - 1].lineItem?.data.length;
+        i++
+      ) {
+        let date =
+          outFlowData[outFlowData.length - 1].lineItem.data[i].duration +
+          outFlowData[outFlowData.length - 1].lineItem.data[i].fiscal_year;
+        cashflowArray.date.push(date);
+      }
+      for (let i = 0; i < Object.keys(cashflowArray).length; i++) {
+        for (
+          let j = 1;
+          j < cashflowArray[Object.keys(cashflowArray)[i]].length;
+          j++
+        ) {
+          if (Object.keys(cashflowArray)[i] !== "date") {
+            cashflowArray[Object.keys(cashflowArray)[i]][j] +=
+              cashflowArray[Object.keys(cashflowArray)[i]][j - 1];
+          }
+        }
+      }
+    }
+    return cashflowArray;
+  };
+  useEffect(() => {
+    setGraphCashFlows((prev) => {
+      return cashflows();
+    });
+  }, [outFlowData]);
+  // useLogger("graphCashFlows :", graphCashFlows);
+  // useLogger("outflowData", outFlowData);
   return (
     <>
       <Divider title={"Inflow Items"} />
@@ -269,7 +256,9 @@ export default function Builder({ fundID, setFundID }) {
           <React.Fragment key={item.lineItem.title}>
             <DataTable
               index={index + 1}
-              title={item.lineItem.title}
+              title={`${item.lineItem.title} ${
+                item.lineItem.outflow ? `(${item.lineItem.outflow})` : ``
+              }`}
               data={item.lineItem.data}
               show={item.lineItem.title !== "net proceeds"}
             />
@@ -277,6 +266,15 @@ export default function Builder({ fundID, setFundID }) {
           </React.Fragment>
         );
       })}
+      <br />
+      <SplitsTable
+        fundID={fundID}
+        data={outFlowData[outFlowData.length - 1]?.lineItem.data}
+      />
+      <br />
+      <GraphOutput cashflows={graphCashFlows} />
+      <br />
+      <br />
     </>
   );
 }

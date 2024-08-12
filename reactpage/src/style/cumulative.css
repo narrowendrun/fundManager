@@ -1,0 +1,25 @@
+.cumulativeProceedsWrapper {
+  background-color: var(--primary-dark);
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 52.5%;
+  left: 25%;
+  border-radius: var(--rounded-borders);
+  padding-top: 1%;
+}
+.cumulativeProceedsWrapper h2 {
+  color: white;
+  padding-left: 5%;
+  margin-bottom: 1%;
+}
+.cumulativeProceeds {
+  position: absolute;
+  background-color: white;
+  width: 90%;
+  height: 78%;
+  left: 5%;
+  top: 15%;
+  padding-left: 3%;
+  border-radius: var(--rounded-borders);
+}

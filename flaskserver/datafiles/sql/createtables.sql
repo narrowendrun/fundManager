@@ -5,15 +5,9 @@ name VARCHAR(50) NOT NULL,
 start_date DATE NOT NULL,
 term INTEGER NOT NULL,
 fund_size FLOAT,
-acquisition_term INTEGER NOT NULL,
-recycle BOOLEAN NOT NULL
+acquisition_term INTEGER NOT NULL
 );
 
-INSERT INTO fund_information (name, start_date, term, fund_size, acquisition_term, recycle)
-VALUES ('ICARIA','2023-01-01',36,0,12,TRUE),
-('BAYPOINT','2023-05-05',36,0,24,TRUE),
-('PMI','2024-01-02',36,0,24,FALSE),
-('RCG LEGACY FUND SERIES I','2023-11-29',18,0,6,FALSE);
 
 CREATE TABLE capitaldeploymentschedule (
     id SERIAL PRIMARY KEY,
@@ -48,20 +42,6 @@ splits_percent FLOAT,
 payment_frequency VARCHAR(50),
 FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
-INSERT INTO debt_structure (fund_id, debt_type, size_usd, interest_rate, debt_equity_ratio, splits_percent, payment_frequency) 
-VALUES 
-(1, 'senior', 0, 8, 0.45, 0, 'quarterly'),
-(1, 'mezz', 0, 13, 0.89, 0, 'quarterly'),
-(1, 'junior', 0, 14, 0.58, 0, 'quarterly'),
-(2, 'senior', 0, 10, 0.16, 10, 'annually'),
-(2, 'mezz', 0, 8, 0.76, 10, 'annually'),
-(2, 'junior', 0, 7, 0.75, 10, 'annually'),
-(3, 'senior', 0, 12, 0.85, 15, 'quarterly'),
-(3, 'mezz', 0, 10, 0.37, 15, 'quarterly'),
-(3, 'junior', 0, 15, 0.65, 15, 'quarterly'),
-(4, 'senior', 0, 9, 0.90, 8, 'annually'),
-(4, 'mezz', 0, 10, 0.12, 8, 'annually'),
-(4, 'junior', 0, 15, 0.28, 8, 'annually');
 
 CREATE TABLE equity_structure (
     equity_id BIGSERIAL PRIMARY KEY NOT NULL,
@@ -74,16 +54,6 @@ CREATE TABLE equity_structure (
     payment_frequency VARCHAR(50),
     FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
-INSERT INTO equity_structure (fund_id, equity_type, size_usd, preferred_percent, tranche_percent, splits_percent, payment_frequency) 
-VALUES 
-(1, 'classa', 0, 9, 62, 45.66, 'quarterly'),
-(1, 'classb', 0, 17, 48, 31.13, 'quarterly'),
-(2, 'classa', 0, 17, 57, 12.33, 'annually'),
-(2, 'classb', 0, 8, 91, 18.70, 'annually'),
-(3, 'classa', 0, 20, 74, 22.82, 'quarterly'),
-(3, 'classb', 0, 18, 58, 29.64, 'quarterly'),
-(4, 'classa', 0, 11, 8, 46.52, 'annually'),
-(4, 'classb', 0, 17, 10, 22.97, 'annually');
 
 CREATE TABLE fees_information (
   id BIGSERIAL PRIMARY KEY NOT NULL ,
@@ -91,13 +61,9 @@ CREATE TABLE fees_information (
   acquisition DOUBLE PRECISION,
   asset_management DOUBLE PRECISION,
   debt_origination DOUBLE PRECISION,
+  other DOUBLE PRECISION,
   FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
-INSERT INTO fees_information (fund_id, acquisition, asset_management, debt_origination)
-VALUES (1, 1, 3, 2),
-       (2, 1, 1.5, 0),
-       (3, 0, 3, 0),
-       (4, 1, 1.5, 0);
 
 
 CREATE TABLE loan_details (
@@ -131,10 +97,10 @@ CREATE TABLE loan_details (
     under_contract_x VARCHAR(10),
     buyer VARCHAR(100),
     under_contract_price NUMERIC,
-    est_close_date DATE,
+    est_close_date VARCHAR(50),
     acq_mos_dlq VARCHAR(25),
     fci_status VARCHAR(100),
-    fci_board_date DATE,
+    fci_board_date VARCHAR(50),
     parson_status VARCHAR(100),
     parson_boarding DATE,
     loss_mit_path VARCHAR(100),
@@ -145,17 +111,17 @@ CREATE TABLE loan_details (
     follow_up_date DATE,
     pay_plan_x VARCHAR(10),
     fc_flag_x VARCHAR(10),
-    fc_rfd_date DATE,
+    fc_rfd_date VARCHAR(50),
     pct_of_fc_cmplt NUMERIC,
-    est_sale_date DATE,
-    actual_sale_date DATE,
+    est_sale_date VARCHAR(50),
+    actual_sale_date VARCHAR(50),
     bk_flag_x VARCHAR(10),
     bk_chapter VARCHAR(10),
-    bk_file_date DATE,
-    bk_dismiss_date DATE,
+    bk_file_date VARCHAR(50),
+    bk_dismiss_date VARCHAR(50),
     current_occupancy VARCHAR(100),
     occupancy_date DATE,
-    eviction_ordered_date DATE,
+    eviction_ordered_date VARCHAR(50),
     acq_date DATE,
     acq_price NUMERIC,
     other_costs NUMERIC,
@@ -168,7 +134,7 @@ CREATE TABLE loan_details (
     liq_date DATE,
     net_proceeds NUMERIC,
     ltv NUMERIC,
-    next_due DATE,
+    next_due VARCHAR(50),
     int_rate NUMERIC,
     p_i_pmt NUMERIC,
     t_i_pmt NUMERIC,
@@ -178,11 +144,11 @@ CREATE TABLE loan_details (
     escrow_balance NUMERIC,
     loan_charges NUMERIC,
     acq_mod_flag VARCHAR(10),
-    mod_flag_date DATE,
+    mod_flag_date VARCHAR(50),
     bpo_recent_val NUMERIC,
-    bpo_recent_val_date DATE,
+    bpo_recent_val_date VARCHAR(50),
     bpo_high_val NUMERIC,
-    bpo_high_val_date DATE,
+    bpo_high_val_date VARCHAR(50),
     value_type VARCHAR(100),
     updated_value_date DATE,
     current_pool VARCHAR(100),
@@ -254,7 +220,38 @@ CREATE TABLE loan_details (
     liquidation_type VARCHAR(100),
     FOREIGN KEY (fund_id) REFERENCES fund_information(fund_id)
 );
+-- Deleting existing data from the tables before copying new data
+
+DELETE FROM loan_details;
+DELETE FROM fees_information;
+DELETE FROM debt_structure;
+DELETE FROM equity_structure;
+DELETE FROM capitalreturnschedule;
+DELETE FROM capitaldeploymentschedule;
+DELETE FROM fund_information;
+
+
+COPY fund_information
+FROM '/docker-entrypoint-initdb.d/fund_information.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY equity_structure
+FROM '/docker-entrypoint-initdb.d/equity_structure.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY debt_structure
+FROM '/docker-entrypoint-initdb.d/debt_structure.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY fees_information
+FROM '/docker-entrypoint-initdb.d/fees_information.csv'
+DELIMITER ','
+CSV HEADER;
+
 COPY loan_details
-FROM '/docker-entrypoint-initdb.d/demoloandetail.csv'
+FROM '/docker-entrypoint-initdb.d/loan_details.csv'
 DELIMITER ','
 CSV HEADER;

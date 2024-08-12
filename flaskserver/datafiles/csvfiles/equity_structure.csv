@@ -1,0 +1,13 @@
+equity_id,fund_id,equity_type,size_usd,preferred_percent,tranche_percent,splits_percent,payment_frequency
+1,1,classa,0,9,100,50,quarterly
+2,1,classb,0,9,0,50,quarterly
+3,2,classa,0,10,90,50,quarterly
+4,2,classb,0,10,10,50,quarterly
+5,3,classa,1811061,14,100,55,quarterly
+6,3,classb,0,14,0,45,quarterly
+7,4,classa,0,10,90,50,quarterly
+8,4,classb,0,10,10,50,quarterly
+9,5,classa,0,20,0,50,quarterly
+10,5,classb,0,20,0,50,quarterly
+11,6,classa,0,20,0,50,quarterly
+12,6,classb,0,20,0,50,quarterly

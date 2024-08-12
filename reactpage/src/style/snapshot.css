@@ -1,0 +1,69 @@
+.snapshotContainer {
+  position: absolute;
+  max-width: 80%;
+  width: 80%;
+  height: 50%;
+  left: 10%;
+  top: 105%;
+  background-color: white;
+  border-radius: var(--rounded-borders);
+}
+.snapshotContainer h2 {
+  padding-left: 2.5%;
+  padding-top: 1.5%;
+}
+.reportSnapshot {
+  position: relative;
+  width: 70%;
+  left: 0%;
+  margin-top: 0%;
+  padding: 2%;
+}
+.pieChartGrid {
+  border: 2px solid black;
+  border-radius: var(--rounded-borders);
+  position: absolute;
+  width: 25%;
+  height: 80%;
+  left: 70%;
+  margin: 1%;
+  top: 10%;
+}
+
+.reportHeadings,
+.reportDataLine {
+  position: relative;
+  width: 75%;
+  left: 25%;
+  display: flex;
+  align-items: center; /* Vertically center the content */
+  justify-content: space-around; /* Optional: Space out the paragraphs evenly */
+}
+.reportDataLine {
+  width: 100%;
+  left: 0;
+}
+
+.reportHeadings p,
+.reportDataLine p {
+  width: 33.33%;
+  margin: 0.5%;
+  padding: 1%;
+  padding-left: 2%;
+  background-color: var(--primary-dark);
+  color: white;
+  border-radius: var(--rounded-borders);
+  font-size: 0.9em;
+  font-weight: 400;
+}
+.reportDataLine p {
+  width: 25%;
+}
+.reportHeadings .headingStyle,
+.reportDataLine .headingStyle {
+  background: white;
+  color: var(--primary-dark);
+  border: 5px solid var(--primary-dark);
+  border-radius: var(--rounded-borders);
+  font-size: 1em;
+}

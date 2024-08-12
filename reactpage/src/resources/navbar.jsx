@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logo from "../images/logo.png";
+import logo from "../images/Designer2.jpeg";
 import { postQuery } from "./functions";
 export default function Navbar({ fundID, setFundID }) {
   const [fundList, setFundList] = useState([]);
@@ -31,9 +31,8 @@ export default function Navbar({ fundID, setFundID }) {
             <img
               src={logo}
               alt="image here"
-              style={{ width: "40px", marginRight: "10px" }}
+              style={{ width: "40px", margin: "0px 0px 0px 10px" }}
             />
-            Revolve Capital
           </a>
           <button
             className="navbar-toggler"
@@ -76,6 +75,11 @@ export default function Navbar({ fundID, setFundID }) {
                   </a>
                 </li>
               </div>
+              <li className="nav-item nav-item-magnify ">
+                <a className="nav-link active" href="/report/">
+                  Report
+                </a>
+              </li>
 
               <li className="nav-item dropdown nav-dropdown">
                 <a

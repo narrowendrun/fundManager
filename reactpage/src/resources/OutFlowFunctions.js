@@ -4,11 +4,13 @@ export const calulateLineData = (
   upperWCR,
   allocation
 ) => {
-  console.log("calculating");
   dataArray[0].paid = Math.min(
     dataArray[0].due,
     (upperCAFD[0] * allocation) / 100
   );
+  if (dataArray[0].paid < 0) {
+    dataArray[0].paid = 0;
+  }
   dataArray[0].accrued = dataArray[0].due - dataArray[0].paid;
   dataArray[0].CAFD = upperCAFD[0] - dataArray[0].paid;
   dataArray[0].WCR = upperWCR[0];
@@ -25,6 +27,9 @@ export const calulateLineData = (
       dataArray[i].due,
       (upperCAFD[i] * allocation) / 100
     );
+    if (dataArray[i].paid < 0) {
+      dataArray[i].paid = 0;
+    }
     dataArray[i].accrued = dataArray[i].due - dataArray[i].paid;
     dataArray[i].CAFD = upperCAFD[i] - dataArray[i].paid;
     dataArray[i].WCR = upperWCR[i];
@@ -44,5 +49,16 @@ export const updateOutFlowData = (prevData, newLineItem, subtype) => {
   } else {
     // Add new entry
     return [...prevData, { lineItem: newLineItem }];
+  }
+};
+export const td_style = (value) => {
+  if (value < 0) {
+    return { background: "red" };
+  } else if (value == 0) {
+    return {
+      background: "rgb(225,173,1)",
+      color: "black",
+      borderColor: "black",
+    };
   }
 };

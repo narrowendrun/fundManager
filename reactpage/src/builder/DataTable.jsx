@@ -1,16 +1,6 @@
 import { numberFormat } from "../resources/functions";
+import { td_style } from "../resources/OutFlowFunctions";
 export default function DataTable({ title, data, show, index }) {
-  const td_style = (value) => {
-    if (value < 0) {
-      return { background: "red" };
-    } else if (value == 0) {
-      return {
-        background: "rgb(225,173,1)",
-        color: "black",
-        borderColor: "black",
-      };
-    }
-  };
   return (
     <>
       <div

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import DropzoneError from "./dropzoneError";
-
+import useLogger from "./useLogger";
+import logo from "../images/Designer2.jpeg";
 export default function FileDropzone() {
   const [returnFile, setReturnFile] = useState(0);
   const [deploymentFile, setDeploymentFile] = useState(0);
@@ -54,7 +55,13 @@ export default function FileDropzone() {
     missingdurations: {
       status: 0,
       result: "",
-      filename: "new.sql",
+      filename: "missing_durations.sql",
+      hasRun: false,
+    },
+    summary: {
+      status: 0,
+      result: "",
+      filename: "summary.sql",
       hasRun: false,
     },
   });
@@ -64,6 +71,7 @@ export default function FileDropzone() {
     border: "1px dashed black",
     borderRadius: "15px",
     textAlign: "center",
+    height: "100%",
   });
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -105,6 +113,11 @@ export default function FileDropzone() {
         const response = await fetch("/api/runsql", requestOptions);
         const result = await response.text();
         const parsedResult = JSON.parse(result);
+        setApiCall((prev) => {
+          const newDict = { ...prev };
+          newDict[table].status = response.status;
+          return newDict;
+        });
 
         if (table == "reset") {
           return new Promise((resolve) => {
@@ -129,6 +142,15 @@ export default function FileDropzone() {
         }
       } catch (error) {
         console.log("error", error);
+        if (error) {
+          setApiCall((prev) => {
+            const newDict = { ...prev };
+            // newDict[table].status = 500;
+            newDict[table].hasRun = false;
+            newDict[table].result = error.toString();
+            return newDict;
+          });
+        }
       }
     }
   }
@@ -195,7 +217,11 @@ export default function FileDropzone() {
                   if (!apiCall.missingdurations.hasRun)
                     await executeSqlFile("missingdurations");
                   if (apiCall.missingdurations.status === 200) {
-                    setSequenceCompleted(true);
+                    if (!apiCall.summary.hasRun)
+                      await executeSqlFile("summary");
+                    if (apiCall.summary.status === 200) {
+                      setSequenceCompleted(true);
+                    }
                   }
                 }
               }
@@ -275,6 +301,8 @@ export default function FileDropzone() {
       display("success2");
     } else display("default");
   }, [uploadedFiles, returnFile, deploymentFile, errorMessage]);
+
+  useLogger("apiCall", apiCall);
   return (
     <>
       <br />
@@ -282,21 +310,33 @@ export default function FileDropzone() {
         className="uploadContainer container"
         style={{ background: "white", padding: "2%", borderRadius: "15px" }}
       >
-        <div {...getRootProps()} style={dropStyle}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the files here ...</p>
-          ) : (
-            <p>Drop your files here</p>
-          )}
-          <p>{errorMessage != "" ? errorMessage : ""}</p>
-          <p>
-            {returnFile == 1 || deploymentFile == 1
-              ? `files ready to upload : ${uploadedFiles
-                  .map((i) => i.file.name)
-                  .join(", ")}`
-              : ""}
-          </p>
+        <div className="row">
+          <div className="col-2">
+            <img
+              src={logo}
+              alt=""
+              style={{ width: "100%", borderRadius: "25px" }}
+            />
+          </div>
+          <div className="col">
+            <div {...getRootProps()} style={dropStyle}>
+              <br />
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <p>Drop your files here</p>
+              )}
+              <p>{errorMessage != "" ? errorMessage : ""}</p>
+              <p>
+                {returnFile == 1 || deploymentFile == 1
+                  ? `files ready to upload : ${uploadedFiles
+                      .map((i) => i.file.name)
+                      .join(", ")}`
+                  : ""}
+              </p>
+            </div>
+          </div>
         </div>
 
         <br />

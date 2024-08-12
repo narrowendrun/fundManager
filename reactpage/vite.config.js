@@ -33,6 +33,7 @@ export default defineConfig({
         cashflowschedule: resolve(root, "cashflowschedule/index.html"),
         feeschedule: resolve(root, "feeschedule/index.html"),
         builder: resolve(root, "builder/index.html"),
+        report: resolve(root, "report/index.html"),
       },
       output: {
         // Ensure the correct path structure is maintained
