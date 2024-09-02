@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 import json
-from sqlalchemy import text,  Table, Column, Integer, Float, Date, MetaData
+from sqlalchemy import Table, Column, Integer, Float, Date, MetaData, String, text
 import subprocess
 from dotenv import load_dotenv
+import pandas as pd
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
@@ -164,200 +166,157 @@ def run_sql_file():
 
     return jsonify({'output': output}), 200
 
-# @app.route('/api/create_table', methods=['POST'])
-# def create_table():
-#     """
-#     API endpoint to create a new table with the specified name and columns.
+def insert_csv_to_psql(csv_file_name, table_name):
+    # Create a database engine
+    engine = create_engine(
+        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    )
 
-#     Expected JSON body format:
-#     {
-#         "table_name": "your_table_name",
-#         "columns": ["total_fee", "classa"]
-#     }
-#     """
-#     data = request.json
-#     table_name = data.get('table_name')
-#     input_columns = data.get('columns', [])
+    # Path to the CSV file
+    csv_file_path = f"{csv_file_name}"
 
-#     if not table_name or not input_columns:
-#         return jsonify({'error': 'Table name and columns are required'}), 400
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(csv_file_path)
 
-#     try:
-#         result = create_dynamic_table(table_name, input_columns)
-#         return jsonify({'message': result}), 200
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
-
-# def create_dynamic_table(table_name, input_columns):
-#     """
-#     Creates a new table with the specified name and columns in the database.
-
-#     Args:
-#         table_name (str): The name of the new table to be created.
-#         input_columns (list): A list of column names to be included in the table.
-        
-#     Returns:
-#         str: Success message if the table is created successfully.
-#     """
-#     # Define common columns
-#     common_columns = [
-#         Column('date', Date, nullable=False),
-#         Column('netproceeds', Float, nullable=True),
-#         Column('cafd-1', Float, nullable=True)
-#     ]
-
-#     # Create a metadata instance
-#     metadata = MetaData()
-
-#     # Define the table with the common columns
-#     columns = common_columns.copy()
-
-#     # Iterate over input columns and add the required columns dynamically
-#     for i, col in enumerate(input_columns, start=2):
-#         columns.append(Column(col, Float, nullable=True))
-#         columns.append(Column(f'allocation-{i}', Float, nullable=True))
-#         columns.append(Column(f'due-{i}', Float, nullable=True))
-#         columns.append(Column(f'paid-{i}', Float, nullable=True))
-#         columns.append(Column(f'accrued-{i}', Float, nullable=True))
-#         columns.append(Column(f'cafd-{i}', Float, nullable=True))
-
-#     # Create the table dynamically
-#     new_table = Table(table_name, metadata, *columns)
-
-#     # Use the metadata to create the table in the database
-#     with db.engine.connect() as connection:
-#         metadata.create_all(connection)
-#         connection.execute(text(f'COMMIT'))
-
-#     return f"Table '{table_name}' created successfully with columns: {', '.join(c.name for c in new_table.columns)}"
+    # Insert data into the PostgreSQL table
+    try:
+        df.to_sql(table_name, engine, if_exists='append', index=False)
+        print(f"Data from {csv_file_name} has been successfully inserted into {table_name} table.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
+import sqlalchemy as sa
+from sqlalchemy.sql import text
+import csv
+import os
+import tempfile
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+import pandas as pd
+from sqlalchemy import MetaData, Table, Column, String, Float
+from sqlalchemy.sql import text
+import logging
+from datetime import datetime
+from dotenv import load_dotenv
+
+metadata = MetaData()
 @app.route('/api/waterfall', methods=['POST'])
-def create_table():
-    """
-    API endpoint to create a new table with the specified name and columns, and populate it with data.
-
-    Expected JSON body format:
-    {
-        "table_name": "your_table_name",
-        "columns": ["total_fee", "classa"],
-        "fund_id": "your_fund_id",
-        "mappings": {
-            "netproceeds": "cashflow_schedule",
-            "total_fee": "fee_schedule",
-            "classa": "costofcapital"
-        }
-    }
-    """
+def waterfall():
     data = request.json
-    table_name = data.get('table_name')
-    input_columns = data.get('columns', [])
-    fund_id = data.get('fund_id')
-    mappings = data.get('mappings', {})
+    name = data.get('name')
+    columns = data.get('columns')
+    from_tables = data.get('fromTable')
+    allocations = data.get('allocations')
+    fund_id = data.get('fundID')
 
-    if not table_name or not input_columns or not fund_id or not mappings:
-        return jsonify({'error': 'Table name, columns, fund_id, and mappings are required'}), 400
+    if not all([name, columns, from_tables, allocations, fund_id]):
+        return jsonify({'error': 'Missing required parameters'}), 400
+
+    # Define the new table schema, allowing it to extend if it already exists
+    new_table = Table(
+        name, metadata,
+        Column('date', String, nullable=False),
+        Column('net_proceeds', Float, nullable=True),
+        Column('cafd0', Float, nullable=True),
+        extend_existing=True
+    )
+
+    for i, column in enumerate(columns):
+        new_table.append_column(Column(column, Float, nullable=True, extend_existing=True))
+        new_table.append_column(Column(f'allocation{i+1}', Float, default=allocations[i], nullable=True, extend_existing=True))
+        new_table.append_column(Column(f'due{i+1}', Float, default=0, nullable=True, extend_existing=True))
+        new_table.append_column(Column(f'paid{i+1}', Float, default=0, nullable=True, extend_existing=True))
+        new_table.append_column(Column(f'accrued{i+1}', Float, default=0, nullable=True, extend_existing=True))
+        new_table.append_column(Column(f'cafd{i+1}', Float, default=0, nullable=True, extend_existing=True))
+
+    # Debugging: Log the created or extended columns
+    logging.debug(f"Creating or extending table {name} with columns: {[col.name for col in new_table.columns]}")
+
+    # Create the table in the database, extending it if necessary
+    metadata.create_all(db.engine, checkfirst=True)
 
     try:
-        create_result = create_dynamic_table(table_name, input_columns)
-        populate_result = populate_dynamic_table(table_name, fund_id, mappings)
-        return jsonify({'message': f"{create_result}. {populate_result}"}), 200
+        with db.engine.connect() as connection:
+            # Execute query to get date and proceeds
+            date_and_proceeds_query = text("""
+                SELECT
+                    DATE_TRUNC('quarter', date) AS quarter,
+                    SUM(net_proceeds) AS net_proceeds
+                FROM cashflow_schedule
+                WHERE fund_id = :fund_id
+                GROUP BY quarter
+                ORDER BY quarter
+            """)
+            date_and_proceeds_result = connection.execute(date_and_proceeds_query, {'fund_id': fund_id}).fetchall()
+
+            insert_data = []
+            previous_record = None  # Store the previous quarter's record
+
+            for row in date_and_proceeds_result:
+                quarter = row[0].strftime('%Y-%m-%d')  # Ensure date is in string format
+                net_proceeds = float(row[1])
+                
+                record = {
+                    'date': quarter,
+                    'net_proceeds': net_proceeds,
+                    'cafd0': net_proceeds
+                }
+
+                for i, (column, from_table) in enumerate(zip(columns, from_tables)):
+                    fee_query = text(f"""
+                        SELECT SUM({column}) AS total_column_value FROM {from_table}
+                        WHERE fund_id = :fund_id AND DATE_TRUNC('quarter', date) = :quarter
+                    """)
+                    fee_result = connection.execute(fee_query, {'fund_id': fund_id, 'quarter': quarter}).scalar()
+
+                    column_value = float(fee_result) if fee_result is not None else 0.0
+                    previous_accrued = previous_record[f'accrued{i+1}'] if previous_record else 0.0
+                    
+                    due = previous_accrued + column_value
+                    if i == 0:
+                        paid = min(net_proceeds * allocations[i] / 100, due)  # Use cafd0 for the first calculation
+                        cafd = net_proceeds - paid
+                    else:
+                        paid = min(record[f'cafd{i}'] * allocations[i] / 100, due)  # Use the previous cafd for subsequent calculations
+                        cafd = record[f'cafd{i}'] - paid
+
+                    accrued = due - paid
+
+                    record[column] = column_value
+                    record[f'allocation{i+1}'] = allocations[i]
+                    record[f'due{i+1}'] = due
+                    record[f'paid{i+1}'] = paid
+                    record[f'accrued{i+1}'] = accrued
+                    record[f'cafd{i+1}'] = cafd
+
+                insert_data.append(record)
+                previous_record = record  # Update previous_record for the next iteration
+
+            # Debug: Print insert data
+            logging.debug(f"Insert data: {insert_data}")
+
+            if not insert_data:
+                return jsonify({'error': 'No data to insert. Check if the cashflow_schedule has data for the given fund_id.'}), 400
+
+            # Save data to a CSV file permanently
+            save_directory = './saved_csv_files/'
+            os.makedirs(save_directory, exist_ok=True)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            csv_filename = os.path.join(save_directory, f"{name}_waterfall_{timestamp}.csv")
+            
+            with open(csv_filename, mode='w', newline='', encoding='utf-8') as file:
+                writer = csv.DictWriter(file, fieldnames=insert_data[0].keys())
+                writer.writeheader()
+                writer.writerows(insert_data)
+
     except Exception as e:
+        db.session.rollback()
+        logging.error(f"Exception occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
-def create_dynamic_table(table_name, input_columns):
-    """
-    Creates a new table with the specified name and columns in the database.
-
-    Args:
-        table_name (str): The name of the new table to be created.
-        input_columns (list): A list of column names to be included in the table.
-        
-    Returns:
-        str: Success message if the table is created successfully.
-    """
-    # Define common columns
-    common_columns = [
-        Column('date', Date, nullable=False),
-        Column('netproceeds', Float, nullable=True),
-        Column('cafd-1', Float, nullable=True)
-    ]
-
-    # Create a metadata instance
-    metadata = MetaData()
-
-    # Define the table with the common columns
-    columns = common_columns.copy()
-
-    # Iterate over input columns and add the required columns dynamically
-    for i, col in enumerate(input_columns, start=2):
-        columns.append(Column(col, Float, nullable=True))
-        columns.append(Column(f'allocation-{i}', Float, nullable=True))
-        columns.append(Column(f'due-{i}', Float, nullable=True))
-        columns.append(Column(f'paid-{i}', Float, nullable=True))
-        columns.append(Column(f'accrued-{i}', Float, nullable=True))
-        columns.append(Column(f'cafd-{i}', Float, nullable=True))
-
-    # Create the table dynamically
-    new_table = Table(table_name, metadata, *columns)
-
-    # Use the metadata to create the table in the database
-    with db.engine.connect() as connection:
-        metadata.create_all(connection)
-        connection.execute(text(f'COMMIT'))
-
-    return f"Table '{table_name}' created successfully with columns: {', '.join(c.name for c in new_table.columns)}"
-
-def populate_dynamic_table(table_name, fund_id, mappings):
-    """
-    Populates a table with data from specified mappings based on fund_id.
-
-    Args:
-        table_name (str): The name of the table to populate.
-        fund_id (str): The fund_id to filter the data.
-        mappings (dict): A dictionary with column names as keys and source tables as values.
-
-    Returns:
-        str: Success message if the table is populated successfully.
-    """
-    with db.engine.connect() as connection:
-        # Get distinct dates from all source tables to ensure all dates are covered
-        dates = set()
-        for column, source_table in mappings.items():
-            date_query = text(f"""
-                SELECT DISTINCT date
-                FROM {source_table}
-                WHERE fund_id = :fund_id
-            """)
-            result = connection.execute(date_query, {'fund_id': fund_id})
-            dates.update(row[0] for row in result)
-
-        # Insert rows for all distinct dates into the target table
-        for date in dates:
-            insert_query = text(f"""
-                INSERT INTO {table_name} (date)
-                VALUES (:date)
-                ON CONFLICT (date) DO NOTHING
-            """)
-            connection.execute(insert_query, {'date': date})
-
-        # Generate and execute queries for each mapping
-        for column, source_table in mappings.items():
-            update_query = text(f"""
-                UPDATE {table_name}
-                SET {column} = COALESCE(
-                    (SELECT {column} 
-                     FROM {source_table} 
-                     WHERE {source_table}.fund_id = :fund_id 
-                     AND {source_table}.date = {table_name}.date
-                     LIMIT 1), 0)
-            """)
-            connection.execute(update_query, {'fund_id': fund_id})
-        
-        # Commit the changes to the database
-        connection.execute(text('COMMIT'))
-
-    return f"Table '{table_name}' populated successfully with data from specified mappings."
-
+    insert_csv_to_psql(csv_filename,name)   
+    return jsonify({'message': f'Data saved to {csv_filename}'}), 200
 if __name__ == "__main__":
     app.run(debug=True)

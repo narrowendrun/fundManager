@@ -1,18 +1,20 @@
 .cumulativeProceedsWrapper {
   background-color: var(--primary-dark);
   position: absolute;
-  width: 50%;
+  width: 80%;
   height: 50%;
   top: 52.5%;
-  left: 25%;
+  left: 10%;
   border-radius: var(--rounded-borders);
   padding-top: 1%;
 }
+
 .cumulativeProceedsWrapper h2 {
   color: white;
   padding-left: 5%;
   margin-bottom: 1%;
 }
+
 .cumulativeProceeds {
   position: absolute;
   background-color: white;
@@ -22,4 +24,15 @@
   top: 15%;
   padding-left: 3%;
   border-radius: var(--rounded-borders);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1%; /* Add padding to create some space around the chart */
+}
+
+.cumulativeProceeds canvas {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }

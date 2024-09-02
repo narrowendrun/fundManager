@@ -67,6 +67,7 @@ export default function CumulativeProceeds({ fundID }) {
   };
 
   const chartOptions = {
+    maintainAspectRatio: false, // Allow the chart to resize based on the container
     scales: {
       x: {
         title: {
@@ -81,6 +82,7 @@ export default function CumulativeProceeds({ fundID }) {
         },
       },
     },
+    responsive: true, // Make the chart responsive
   };
 
   return (

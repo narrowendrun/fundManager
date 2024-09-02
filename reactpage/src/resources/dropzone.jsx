@@ -311,13 +311,13 @@ export default function FileDropzone() {
         style={{ background: "white", padding: "2%", borderRadius: "15px" }}
       >
         <div className="row">
-          <div className="col-2">
+          {/* <div className="col-2">
             <img
               src={logo}
               alt=""
               style={{ width: "100%", borderRadius: "25px" }}
             />
-          </div>
+          </div> */}
           <div className="col">
             <div {...getRootProps()} style={dropStyle}>
               <br />
@@ -346,7 +346,7 @@ export default function FileDropzone() {
           }`}
           onClick={() => resetAndUpload()}
         >
-          update database
+          update schedule
         </div>
 
         <div

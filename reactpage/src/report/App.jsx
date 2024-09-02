@@ -5,6 +5,7 @@ import ReportBlockWrapper from "./reportBlockWrapper";
 import Snapshot from "./snapshot";
 import UnitEconomics from "./unitEconomics";
 import CumulativeProceeds from "./cumulative_net_proceeds";
+import Waterfall from "./waterfall";
 
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());
@@ -24,6 +25,10 @@ export default function App() {
       <CumulativeProceeds fundID={fundID} />
       <Snapshot fundID={fundID} />
       <UnitEconomics fundID={fundID} />
+      <Waterfall fundID={fundID} />
+      <br />
+      <br />
+      <br />
     </>
   );
 }

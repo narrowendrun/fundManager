@@ -1,0 +1,51 @@
+.waterfallWrapper {
+  position: absolute;
+  width: 100%;
+  left: 0%;
+  top: 195%;
+  height: 80%;
+}
+
+.waterfall {
+  position: relative;
+  width: 80%;
+  left: 10%;
+  background-color: white;
+  overflow: scroll;
+  border-radius: var(--rounded-borders);
+  padding: 2.5%;
+}
+
+/*  */
+
+.waterfallRowWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+  white-space: nowrap; /* Prevents text from wrapping */
+  border: 1px solid blue;
+  border-radius: var(--rounded-borders);
+  margin-bottom: 2.5%;
+}
+
+.waterfallRow {
+  display: flex;
+  justify-content: space-between; /* Distribute space equally between items */
+  align-items: center;
+  min-width: 100%; /* Ensures that the row takes up at least the full width of the container */
+}
+
+.waterfallRow p {
+  flex: 1;
+  text-align: center; /* Centers the text within each p tag */
+  margin: 0; /* Removes any default margin */
+  padding: 0.5rem; /* Adds some padding for better spacing */
+  white-space: nowrap; /* Prevents the text from wrapping */
+  border: 1px solid black;
+  text-align: center;
+}
+
+.waterfallRowHeadings {
+  font-weight: bold; /* Make the headings bold */
+  background-color: bisque;
+}
