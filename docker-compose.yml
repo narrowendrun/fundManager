@@ -3,9 +3,9 @@ services:
     image: postgres:14.1-alpine
     container_name: fundmanager-db
     environment:
-      POSTGRES_USER: "narendran"
-      POSTGRES_PASSWORD: "narendran"
-      POSTGRES_DB: "revolve_db"
+      POSTGRES_USER: "fundmanager"
+      POSTGRES_PASSWORD: "fundmanager"
+      POSTGRES_DB: "fundmanager"
     ports:
       - "5432:5432"
     volumes:
@@ -20,11 +20,11 @@ services:
     container_name: fundmanager-backend
     command: flask run --host=0.0.0.0
     environment:
-      DB_USER: "narendran"
-      DB_PASSWORD: "narendran"
+      DB_USER: "fundmanager"
+      DB_PASSWORD: "fundmanager"
       DB_HOST: db
       DB_PORT: "5432"
-      DB_NAME: "revolve_db"
+      DB_NAME: "fundmanager"
     ports:
       - "5001:5000"
     depends_on:
