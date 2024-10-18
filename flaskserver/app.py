@@ -2,11 +2,13 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 import json
-from sqlalchemy import Table, Column, Integer, Float, Date, MetaData, String, text
+from sqlalchemy import Table, Column, Integer, Float, Date, MetaData, String, text, BigInteger, ForeignKey
 import subprocess
 from dotenv import load_dotenv
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
+
 
 app = Flask(__name__)
 
@@ -85,6 +87,221 @@ class CapitalDeploymentSchedule(db.Model):
     classa = db.Column(db.Float, nullable=True)
     classb = db.Column(db.Float, nullable=True)
 
+class FundInformation(db.Model):
+    __tablename__ = 'fund_information'
+    fund_id = Column(BigInteger, primary_key=True, nullable=False)
+    name = Column(String(50), nullable=False)
+    start_date = Column(Date, nullable=False)
+    term = Column(Integer, nullable=False)
+    fund_size = Column(Float, nullable=True)
+    acquisition_term = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<FundInformation(fund_id={self.fund_id}, name='{self.name}', start_date={self.start_date}, term={self.term}, fund_size={self.fund_size}, acquisition_term={self.acquisition_term})>"
+class EquityStructure(db.Model):
+    __tablename__ = 'equity_structure'
+
+    equity_id = Column(db.BIGINT, primary_key=True, autoincrement=True)
+    fund_id = Column(Integer, ForeignKey('fund_information.fund_id'), nullable=False)
+    equity_type = Column(String(50), nullable=True)
+    size_usd = Column(Float, nullable=True)
+    preferred_percent = Column(Float, nullable=True)
+    tranche_percent = Column(Float, nullable=True)
+    splits_percent = Column(Float, nullable=True)
+    payment_frequency = Column(String(50), nullable=True)
+
+    def __repr__(self):
+        return (f"<EquityStructure(equity_id={self.equity_id}, fund_id={self.fund_id}, "
+                f"equity_type='{self.equity_type}', size_usd={self.size_usd}, "
+                f"preferred_percent={self.preferred_percent}, tranche_percent={self.tranche_percent}, "
+                f"splits_percent={self.splits_percent}, payment_frequency='{self.payment_frequency}')>")
+
+class DebtStructure(db.Model):
+    __tablename__ = 'debt_structure'
+
+    debt_id = Column(BigInteger, primary_key=True, nullable=False)
+    fund_id = Column(Integer, ForeignKey('fund_information.fund_id'), nullable=False)
+    debt_type = Column(String(50), nullable=True)
+    size_usd = Column(Float, nullable=True)
+    interest_rate = Column(Float, nullable=True)
+    debt_equity_ratio = Column(Float, nullable=True)
+    splits_percent = Column(Float, nullable=True)
+    payment_frequency = Column(String(50), nullable=True)
+
+    def __repr__(self):
+        return (f"<DebtStructure(debt_id={self.debt_id}, fund_id={self.fund_id}, debt_type='{self.debt_type}', "
+                f"size_usd={self.size_usd}, interest_rate={self.interest_rate}, debt_equity_ratio={self.debt_equity_ratio}, "
+                f"splits_percent={self.splits_percent}, payment_frequency='{self.payment_frequency}')>")
+
+class FeesInformation(db.Model):
+    __tablename__ = 'fees_information'
+
+    id = Column(BigInteger, primary_key=True, nullable=False)
+    fund_id = Column(Integer, ForeignKey('fund_information.fund_id'), nullable=True)
+    acquisition = Column(Float, nullable=True)
+    asset_management = Column(Float, nullable=True)
+    debt_origination = Column(Float, nullable=True)
+    other = Column(Float, nullable=True)
+
+    def __repr__(self):
+        return (f"<FeesInformation(id={self.id}, fund_id={self.fund_id}, acquisition={self.acquisition}, "
+                f"asset_management={self.asset_management}, debt_origination={self.debt_origination}, other={self.other})>")
+
+class LoanDetails(db.Model):
+    __tablename__ = 'loan_details'
+    
+    loan_id = db.Column(db.String(100), primary_key=True, nullable=False)
+    svc_loan_id = db.Column(db.String(100))
+    prev_loan_id = db.Column(db.String(100))
+    prev_svc_loan_id = db.Column(db.String(100))
+    fund_id = db.Column(db.Integer, db.ForeignKey('fund_information.fund_id'))
+    legal_entity = db.Column(db.String(100))
+    co_investor = db.Column(db.String(100))
+    prev_servicer = db.Column(db.String(100))
+    revolve_servicer = db.Column(db.String(100))
+    acquisition_service_xfer_date = db.Column(db.Date)
+    liquidation_service_xfer_date = db.Column(db.Date)
+    asset_mgr = db.Column(db.String(100))
+    months_in_inventory = db.Column(db.Numeric)
+    acq_pool = db.Column(db.String(100))
+    acq_path = db.Column(db.String(100))
+    acq_product = db.Column(db.String(100))
+    model_exit_time = db.Column(db.DateTime)
+    updated_liq_date = db.Column(db.Date)
+    status = db.Column(db.String(100))
+    total_investment = db.Column(db.Numeric)
+    revolve_val_most_recent = db.Column(db.Numeric)
+    revolve_value_date_most_recent = db.Column(db.Date)
+    name = db.Column(db.String(100))
+    address = db.Column(db.String(100))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(100))
+    zip = db.Column(db.String(20))
+    under_contract_x = db.Column(db.String(10))
+    buyer = db.Column(db.String(100))
+    under_contract_price = db.Column(db.Numeric)
+    est_close_date = db.Column(db.String(50))
+    acq_mos_dlq = db.Column(db.String(25))
+    fci_status = db.Column(db.String(100))
+    fci_board_date = db.Column(db.String(50))
+    parson_status = db.Column(db.String(100))
+    parson_boarding = db.Column(db.Numeric)
+    loss_mit_path = db.Column(db.String(100))
+    loss_mit_milestone = db.Column(db.String(100))
+    date_status_updated = db.Column(db.String(25))
+    revolve_comments = db.Column(db.Text)
+    follow_up_task = db.Column(db.String(100))
+    follow_up_date = db.Column(db.Numeric)
+    pay_plan_x = db.Column(db.String(10))
+    fc_flag_x = db.Column(db.String(10))
+    fc_rfd_date = db.Column(db.String(50))
+    pct_of_fc_cmplt = db.Column(db.Numeric)
+    est_sale_date = db.Column(db.String(50))
+    actual_sale_date = db.Column(db.String(50))
+    bk_flag_x = db.Column(db.String(10))
+    bk_chapter = db.Column(db.String(10))
+    bk_file_date = db.Column(db.String(50))
+    bk_dismiss_date = db.Column(db.String(50))
+    current_occupancy = db.Column(db.String(100))
+    occupancy_date = db.Column(db.Date)
+    eviction_ordered_date = db.Column(db.String(50))
+    acq_date = db.Column(db.Date)
+    acq_price = db.Column(db.Numeric)
+    other_costs = db.Column(db.Numeric)
+    dd_srvcg_costs = db.Column(db.Numeric)
+    legal_costs = db.Column(db.Numeric)
+    reo_costs = db.Column(db.Numeric)
+    debt_costs = db.Column(db.Numeric)
+    total_loan_costs = db.Column(db.Numeric)
+    liq_price = db.Column(db.Numeric)
+    liq_date = db.Column(db.Date)
+    net_proceeds = db.Column(db.Numeric)
+    ltv = db.Column(db.Numeric)
+    next_due = db.Column(db.String(50))
+    int_rate = db.Column(db.Numeric)
+    p_i_pmt = db.Column(db.Numeric)
+    t_i_pmt = db.Column(db.Numeric)
+    upb = db.Column(db.Numeric)
+    legal_balance = db.Column(db.Numeric)
+    defr_d_princ = db.Column(db.Numeric)
+    escrow_balance = db.Column(db.Numeric)
+    loan_charges = db.Column(db.Numeric)
+    acq_mod_flag = db.Column(db.String(10))
+    mod_flag_date = db.Column(db.String(50))
+    bpo_recent_val = db.Column(db.Numeric)
+    bpo_recent_val_date = db.Column(db.String(50))
+    bpo_high_val = db.Column(db.Numeric)
+    bpo_high_val_date = db.Column(db.String(50))
+    value_type = db.Column(db.String(100))
+    updated_value_date = db.Column(db.Numeric)
+    current_pool = db.Column(db.String(100))
+    latest_pool_date = db.Column(db.Numeric)
+    total_pools = db.Column(db.Numeric)
+    projected_next_pool_date = db.Column(db.Numeric)
+    suspense_balance = db.Column(db.Numeric)
+    p_i_since_boarding = db.Column(db.Numeric)
+    count_3 = db.Column(db.Numeric)
+    count_6 = db.Column(db.Numeric)
+    count_9 = db.Column(db.Numeric)
+    count_12 = db.Column(db.Numeric)
+    p_i_curr_mth = db.Column(db.Numeric)
+    p_i_last_2 = db.Column(db.Numeric)
+    p_i_last_3 = db.Column(db.Numeric)
+    p_i_last_4 = db.Column(db.Numeric)
+    p_i_last_5 = db.Column(db.Numeric)
+    p_i_last_6 = db.Column(db.Numeric)
+    p_i_last_7 = db.Column(db.Numeric)
+    p_i_last_8 = db.Column(db.Numeric)
+    p_i_last_9 = db.Column(db.Numeric)
+    p_i_last_10 = db.Column(db.Numeric)
+    p_i_last_11 = db.Column(db.Numeric)
+    p_i_last_12 = db.Column(db.Numeric)
+    p_i_last_13 = db.Column(db.Numeric)
+    p_i_last_14 = db.Column(db.Numeric)
+    p_i_last_15 = db.Column(db.Numeric)
+    p_i_last_16 = db.Column(db.Numeric)
+    p_i_last_17 = db.Column(db.Numeric)
+    p_i_last_18 = db.Column(db.Numeric)
+    p_i_last_19 = db.Column(db.Numeric)
+    p_i_last_20 = db.Column(db.Numeric)
+    p_i_last_21 = db.Column(db.Numeric)
+    p_i_last_22 = db.Column(db.Numeric)
+    p_i_last_23 = db.Column(db.Numeric)
+    p_i_last_24 = db.Column(db.Numeric)
+    dlq_tax_24 = db.Column(db.Numeric)
+    lien_1 = db.Column(db.String(100))
+    lien_other = db.Column(db.String(100))
+    note_date = db.Column(db.Date)
+    amort = db.Column(db.Numeric)
+    first_pmt_due = db.Column(db.Date)
+    maturity_date = db.Column(db.Date)
+    acq_value = db.Column(db.Numeric)
+    acq_value_date = db.Column(db.Date)
+    orig_loan_amt = db.Column(db.Numeric)
+    acq_upb = db.Column(db.Numeric)
+    acq_legal_bal = db.Column(db.Numeric)
+    acq_next_due = db.Column(db.Date)
+    acq_i_rate = db.Column(db.Numeric)
+    acq_p_i = db.Column(db.Numeric)
+    acq_t_i = db.Column(db.Numeric)
+    acq_occ = db.Column(db.String(100))
+    acq_fc_flag = db.Column(db.String(100))
+    acq_fc_start = db.Column(db.String(25))
+    acq_bk_yn = db.Column(db.String(10))
+    acq_bk_713 = db.Column(db.String(10))
+    acq_dlqt_taxes = db.Column(db.Numeric)
+    acq_prop_type = db.Column(db.String(100))
+    acq_jr_lien = db.Column(db.String(100))
+    reporting_category = db.Column(db.String(100))
+    reporting_group = db.Column(db.String(100))
+    updated_exit_path = db.Column(db.String(100))
+    expected_future_dollars = db.Column(db.Numeric)
+    optimized_actual_wholesale_price = db.Column(db.Numeric)
+    optimized_retail_price = db.Column(db.Numeric)
+    remaining_costs = db.Column(db.Numeric)
+    actual_projected_moic = db.Column(db.Numeric)
+    liquidation_type = db.Column(db.String(100))
+
 @app.route('/api/debug_env', methods=['GET'])
 def debug_env():
     env_vars = {
@@ -114,28 +331,55 @@ def upload_file():
     filename = file.filename
     file.save(filename)
     
-    with open(filename, 'r') as f:
-        data = json.load(f)
+    # Read the CSV file using pandas
+    try:
+        data = pd.read_csv(filename)
+    except Exception as e:
+        os.remove(filename)
+        return jsonify({'error': f'Failed to read CSV file: {str(e)}'}), 400
     
     model_mapping = {
         'capitalreturnschedule': CapitalReturnSchedule,
-        'capitaldeploymentschedule': CapitalDeploymentSchedule
+        'capitaldeploymentschedule': CapitalDeploymentSchedule,
+        'fundinformation': FundInformation,
+        "feesinformation": FeesInformation,
+        "equitystructure": EquityStructure,
+        "debtstructure": DebtStructure,
+        "loandetails": LoanDetails
     }
     
     if table_name not in model_mapping:
         os.remove(filename)
+        print(table_name)
         return jsonify({'error': 'Invalid table name'}), 400
     
     model = model_mapping[table_name]
+
+    # Delete existing records from the table
+    try:
+        db.session.query(model).delete()
+        db.session.commit()
+    except Exception as e:
+        os.remove(filename)
+        return jsonify({'error': f'Failed to delete existing data from {table_name}: {str(e)}'}), 500
+
+    # Convert the CSV data into a list of dictionaries
+    data_dicts = data.to_dict(orient='records')
     
-    for entry in data:
-        record = model(**entry)
-        db.session.add(record)
+    try:
+        for entry in data_dicts:
+            record = model(**entry)
+            db.session.add(record)
+        db.session.commit()
+    except Exception as e:
+        os.remove(filename)
+        return jsonify({'error': f'Failed to insert data into {table_name}: {str(e)}'}), 500
     
-    db.session.commit()
     os.remove(filename)
-    
-    return jsonify({'message': f'Data inserted into {table_name}'}), 200
+    return jsonify({'message': f'Existing data cleared and new data inserted into {table_name}'}), 200
+
+
+from sqlalchemy import text
 
 @app.route('/api/query', methods=['POST'])
 def execute_query():
@@ -145,11 +389,27 @@ def execute_query():
 
     try:
         with db.engine.connect() as connection:
-            result = connection.execute(text(query))
-            rows = [dict(zip(result.keys(), [str(value) for value in row])) for row in result]
-            return jsonify(rows)
-    except Exception as e:
+            # Start a transaction
+            transaction = connection.begin()
+            try:
+                result = connection.execute(text(query))
+                
+                # Commit the transaction if the query modifies data or schema
+                transaction.commit()
+                
+                if result.returns_rows:
+                    rows = [dict(zip(result.keys(), [str(value) for value in row])) for row in result]
+                    return jsonify(rows)
+                else:
+                    return jsonify({'message': 'Query executed successfully'})
+            except Exception as query_exception:
+                # Rollback if there's an issue with the query
+                transaction.rollback()
+                return jsonify({'error': str(query_exception)}), 500
+    except Exception as e:  
         return jsonify({'error': str(e)}), 500
+        
+    
     
 @app.route('/api/runsql', methods=['POST'])
 def run_sql_file():
@@ -214,7 +474,7 @@ def waterfall():
     if not all([name, columns, from_tables, allocations, fund_id]):
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    # Define the new table schema, allowing it to extend if it already exists
+    # Define the new table schema
     new_table = Table(
         name, metadata,
         Column('date', String, nullable=False),
@@ -224,21 +484,47 @@ def waterfall():
     )
 
     for i, column in enumerate(columns):
-        new_table.append_column(Column(column, Float, nullable=True, extend_existing=True))
-        new_table.append_column(Column(f'allocation{i+1}', Float, default=allocations[i], nullable=True, extend_existing=True))
-        new_table.append_column(Column(f'due{i+1}', Float, default=0, nullable=True, extend_existing=True))
-        new_table.append_column(Column(f'paid{i+1}', Float, default=0, nullable=True, extend_existing=True))
-        new_table.append_column(Column(f'accrued{i+1}', Float, default=0, nullable=True, extend_existing=True))
-        new_table.append_column(Column(f'cafd{i+1}', Float, default=0, nullable=True, extend_existing=True))
+        new_table.append_column(Column(column, Float, nullable=True),replace_existing=True)
+        new_table.append_column(Column(f'allocation{i+1}', Float, default=allocations[i], nullable=True),replace_existing=True)
+        new_table.append_column(Column(f'due{i+1}', Float, default=0, nullable=True),replace_existing=True)
+        new_table.append_column(Column(f'paid{i+1}', Float, default=0, nullable=True),replace_existing=True)
+        new_table.append_column(Column(f'accrued{i+1}', Float, default=0, nullable=True),replace_existing=True)
+        new_table.append_column(Column(f'cafd{i+1}', Float, default=0, nullable=True),replace_existing=True)
 
-    # Debugging: Log the created or extended columns
     logging.debug(f"Creating or extending table {name} with columns: {[col.name for col in new_table.columns]}")
-
-    # Create the table in the database, extending it if necessary
-    metadata.create_all(db.engine, checkfirst=True)
 
     try:
         with db.engine.connect() as connection:
+            # Drop the table if it exists
+            drop_query = text(f"DROP TABLE IF EXISTS {name};")
+            connection.execute(drop_query)
+            logging.info(f"Table {name} dropped successfully if it existed.")
+
+            # Create the table in the database
+            logging.info(f"Attempting to create table {name}.")
+            metadata.create_all(db.engine, checkfirst=True)
+
+            # Check if the table was created
+            table_exists_query = text(f"""
+                SELECT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.tables 
+                    WHERE table_name = :name
+                );
+            """)
+            table_exists = connection.execute(table_exists_query, {'name': name}).scalar()
+
+            if table_exists:
+                logging.info(f"Table {name} created successfully.")
+                
+                # Truncate the table before inserting new data
+                truncate_query = text(f"TRUNCATE TABLE {name};")
+                connection.execute(truncate_query)
+                logging.info(f"Table {name} truncated successfully.")
+            else:
+                logging.error(f"Table {name} was not created. Skipping truncate operation.")
+                return jsonify({'error': f"Table {name} was not created. Skipping truncate operation."}), 500
+
             # Execute query to get date and proceeds
             date_and_proceeds_query = text("""
                 SELECT
@@ -252,10 +538,10 @@ def waterfall():
             date_and_proceeds_result = connection.execute(date_and_proceeds_query, {'fund_id': fund_id}).fetchall()
 
             insert_data = []
-            previous_record = None  # Store the previous quarter's record
+            previous_record = None
 
             for row in date_and_proceeds_result:
-                quarter = row[0].strftime('%Y-%m-%d')  # Ensure date is in string format
+                quarter = row[0].strftime('%Y-%m-%d')
                 net_proceeds = float(row[1])
                 
                 record = {
@@ -276,10 +562,10 @@ def waterfall():
                     
                     due = previous_accrued + column_value
                     if i == 0:
-                        paid = min(net_proceeds * allocations[i] / 100, due)  # Use cafd0 for the first calculation
+                        paid = min(net_proceeds * allocations[i] / 100, due)
                         cafd = net_proceeds - paid
                     else:
-                        paid = min(record[f'cafd{i}'] * allocations[i] / 100, due)  # Use the previous cafd for subsequent calculations
+                        paid = min(record[f'cafd{i}'] * allocations[i] / 100, due)
                         cafd = record[f'cafd{i}'] - paid
 
                     accrued = due - paid
@@ -292,15 +578,13 @@ def waterfall():
                     record[f'cafd{i+1}'] = cafd
 
                 insert_data.append(record)
-                previous_record = record  # Update previous_record for the next iteration
+                previous_record = record
 
-            # Debug: Print insert data
             logging.debug(f"Insert data: {insert_data}")
 
             if not insert_data:
                 return jsonify({'error': 'No data to insert. Check if the cashflow_schedule has data for the given fund_id.'}), 400
 
-            # Save data to a CSV file permanently
             save_directory = './saved_csv_files/'
             os.makedirs(save_directory, exist_ok=True)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -316,7 +600,7 @@ def waterfall():
         logging.error(f"Exception occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
-    insert_csv_to_psql(csv_filename,name)   
+    insert_csv_to_psql(csv_filename, name)   
     return jsonify({'message': f'Data saved to {csv_filename}'}), 200
 if __name__ == "__main__":
     app.run(debug=True)

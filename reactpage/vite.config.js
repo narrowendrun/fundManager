@@ -11,8 +11,8 @@ export default defineConfig({
     port: 8000,
     proxy: {
       "/api": {
-        // target: "http://backend:5000",
-        target: "http://127.0.0.1:5000",
+        target: "http://backend:5000",
+        // target: "http://127.0.0.1:5000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/api/"),
       },
@@ -33,6 +33,7 @@ export default defineConfig({
         cashflowschedule: resolve(root, "cashflowschedule/index.html"),
         feeschedule: resolve(root, "feeschedule/index.html"),
         builder: resolve(root, "builder/index.html"),
+        waterfall: resolve(root, "waterfall/index.html"),
         report: resolve(root, "report/index.html"),
       },
       output: {

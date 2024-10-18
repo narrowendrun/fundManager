@@ -6,6 +6,33 @@ import React from "react";
 export default function Waterfall({ fundID }) {
   const [dbData, setDbData] = useState([]);
 
+  function buildWaterfall() {
+    fetch("/api/waterfall", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: `waterfall_${fundID}`,
+        columns: ["total_fee", "classa"],
+        fromTable: ["fee_schedule", "costofcapital"],
+        allocations: [100, 100],
+        fundID: fundID.toString(), // Ensure fundID is passed as a string
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // If the request is successful, reload the window
+          window.location.reload();
+        } else {
+          console.error("API call failed with status:", response.status);
+        }
+      })
+      .catch((error) => {
+        console.error("Error occurred during the API call:", error);
+      });
+  }
+
   useEffect(() => {
     postQuery(
       { query: `SELECT * FROM waterfall_${fundID} ORDER BY date DESC` },
@@ -19,7 +46,10 @@ export default function Waterfall({ fundID }) {
   if (!dbData || dbData.length === 0) {
     return (
       <div className="waterfallWrapper">
-        <div className="waterfall">No waterfall data available.</div>
+        <div className="waterfall">
+          <p>No waterfall data available.</p>
+          <button onClick={() => buildWaterfall()}>build waterfall</button>
+        </div>
       </div>
     );
   }

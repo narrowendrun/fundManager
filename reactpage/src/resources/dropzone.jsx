@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import DropzoneError from "./dropzoneError";
 import useLogger from "./useLogger";
 import logo from "../images/Designer2.jpeg";
+import RepopulateTables from "./repopulate";
 export default function FileDropzone() {
   const [returnFile, setReturnFile] = useState(0);
   const [deploymentFile, setDeploymentFile] = useState(0);
@@ -19,13 +20,13 @@ export default function FileDropzone() {
     capitalreturnschedule: {
       status: 0,
       result: "",
-      filename: "capitalreturnschedule.json",
+      filename: "capitalreturnschedule.csv",
       hasRun: false,
     },
     capitaldeploymentschedule: {
       status: 0,
       result: "",
-      filename: "capitaldeploymentschedule.json",
+      filename: "capitaldeploymentschedule.csv",
       hasRun: false,
     },
     capitaloutstandingbalance: {
@@ -246,7 +247,7 @@ export default function FileDropzone() {
       let newUploadedFiles = [...uploadedFiles];
       for (let i = 0; i < acceptedFiles.length; i++) {
         if (
-          acceptedFiles[i].name == "capitalreturnschedule.json" &&
+          acceptedFiles[i].name == "capitalreturnschedule.csv" &&
           returnFile == 0
         ) {
           setReturnFile(1);
@@ -258,7 +259,7 @@ export default function FileDropzone() {
             file: acceptedFiles[i],
           });
         } else if (
-          acceptedFiles[i].name == "capitaldeploymentschedule.json" &&
+          acceptedFiles[i].name == "capitaldeploymentschedule.csv" &&
           deploymentFile == 0
         ) {
           setErrorMessage("");
@@ -310,14 +311,8 @@ export default function FileDropzone() {
         className="uploadContainer container"
         style={{ background: "white", padding: "2%", borderRadius: "15px" }}
       >
+        <h4>Update schedules</h4>
         <div className="row">
-          {/* <div className="col-2">
-            <img
-              src={logo}
-              alt=""
-              style={{ width: "100%", borderRadius: "25px" }}
-            />
-          </div> */}
           <div className="col">
             <div {...getRootProps()} style={dropStyle}>
               <br />
@@ -363,11 +358,6 @@ export default function FileDropzone() {
           ))}
         </div>
       </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
     </>
   );
 }

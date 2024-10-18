@@ -2,6 +2,7 @@ import { useState } from "react";
 import FileDropzone from "./resources/dropzone";
 import Navbar from "./resources/navbar";
 import { getInitialFundID } from "./resources/functions";
+import DropZoneTables from "./resources/dropzoneTables";
 
 export default function App() {
   const [fundID, setFundID] = useState(getInitialFundID());
@@ -18,6 +19,9 @@ export default function App() {
         <br />
         <br />
         <FileDropzone />
+        <br />
+        <br />
+        <DropZoneTables />
       </div>
     </>
   );

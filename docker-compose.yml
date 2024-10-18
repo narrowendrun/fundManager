@@ -10,10 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - ./flaskserver/datafiles/sql/createtables.sql:/docker-entrypoint-initdb.d/createtables.sql
-      - ./flaskserver/datafiles/csvfiles/fund_information.csv:/docker-entrypoint-initdb.d/fund_information.csv
-      - ./flaskserver/datafiles/csvfiles/equity_structure.csv:/docker-entrypoint-initdb.d/equity_structure.csv
-      - ./flaskserver/datafiles/csvfiles/debt_structure.csv:/docker-entrypoint-initdb.d/debt_structure.csv
-      - ./flaskserver/datafiles/csvfiles/fees_information.csv:/docker-entrypoint-initdb.d/fees_information.csv
       - ./flaskserver/datafiles/csvfiles/loan_details.csv:/docker-entrypoint-initdb.d/loan_details.csv
       # - postgres_data:/var/lib/postgresql/data
     env_file:

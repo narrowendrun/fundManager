@@ -76,6 +76,11 @@ export default function Navbar({ fundID, setFundID }) {
                 </li>
               </div>
               <li className="nav-item nav-item-magnify ">
+                <a className="nav-link active" href="/waterfall/">
+                  Waterfall
+                </a>
+              </li>
+              <li className="nav-item nav-item-magnify ">
                 <a className="nav-link active" href="/report/">
                   Report
                 </a>

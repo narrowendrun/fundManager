@@ -102,13 +102,13 @@ CREATE TABLE loan_details (
     fci_status VARCHAR(100),
     fci_board_date VARCHAR(50),
     parson_status VARCHAR(100),
-    parson_boarding DATE,
+    parson_boarding NUMERIC,
     loss_mit_path VARCHAR(100),
     loss_mit_milestone VARCHAR(100),
     date_status_updated VARCHAR(25),
     revolve_comments TEXT,
     follow_up_task VARCHAR(100),
-    follow_up_date DATE,
+    follow_up_date NUMERIC,
     pay_plan_x VARCHAR(10),
     fc_flag_x VARCHAR(10),
     fc_rfd_date VARCHAR(50),
@@ -150,17 +150,17 @@ CREATE TABLE loan_details (
     bpo_high_val NUMERIC,
     bpo_high_val_date VARCHAR(50),
     value_type VARCHAR(100),
-    updated_value_date DATE,
+    updated_value_date NUMERIC,
     current_pool VARCHAR(100),
-    latest_pool_date DATE,
+    latest_pool_date NUMERIC,
     total_pools NUMERIC,
-    projected_next_pool_date DATE,
+    projected_next_pool_date NUMERIC,
     suspense_balance NUMERIC,
     p_i_since_boarding NUMERIC,
-    "3_count" NUMERIC,
-    "6_count" NUMERIC,
-    "9_count" NUMERIC,
-    "12_count" NUMERIC,
+    "count_3" NUMERIC,
+    "count_6" NUMERIC,
+    "count_9" NUMERIC,
+    "count_12" NUMERIC,
     p_i_curr_mth NUMERIC,
     p_i_last_2 NUMERIC,
     p_i_last_3 NUMERIC,
@@ -231,27 +231,27 @@ DELETE FROM capitaldeploymentschedule;
 DELETE FROM fund_information;
 
 
-COPY fund_information
-FROM '/docker-entrypoint-initdb.d/fund_information.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY fund_information
+-- FROM '/docker-entrypoint-initdb.d/fund_information.csv'
+-- DELIMITER ','
+-- CSV HEADER;
 
-COPY equity_structure
-FROM '/docker-entrypoint-initdb.d/equity_structure.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY equity_structure
+-- FROM '/docker-entrypoint-initdb.d/equity_structure.csv'
+-- DELIMITER ','
+-- CSV HEADER;
 
-COPY debt_structure
-FROM '/docker-entrypoint-initdb.d/debt_structure.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY debt_structure
+-- FROM '/docker-entrypoint-initdb.d/debt_structure.csv'
+-- DELIMITER ','
+-- CSV HEADER;
 
-COPY fees_information
-FROM '/docker-entrypoint-initdb.d/fees_information.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY fees_information
+-- FROM '/docker-entrypoint-initdb.d/fees_information.csv'
+-- DELIMITER ','
+-- CSV HEADER;
 
-COPY loan_details
-FROM '/docker-entrypoint-initdb.d/loan_details.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY loan_details
+-- FROM '/docker-entrypoint-initdb.d/loan_details.csv'
+-- DELIMITER ','
+-- CSV HEADER;
